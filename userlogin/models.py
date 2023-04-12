@@ -6,7 +6,7 @@ class UserModels(AbstractBaseUser):
     last_name = models.CharField(max_length=15, blank=True, null=True)
     username = models.CharField(max_length=30, blank=True, null=True)
     email = models.EmailField(unique=True) 
-    number = models.PositiveIntegerField(blank=True, null=True)
+    number = models.CharField(max_length=15,blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)

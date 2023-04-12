@@ -1,18 +1,30 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .forms import UserForm,UserRegister
+from django.views.generic import View, TemplateView
+from django.contrib.auth.views import LoginView
+
 
 # Create your views here.
-def base(request):
-    return render(request, 'base.html')
+class Base(TemplateView):
+    template_name = "base.html"
 
-def login(request):
-    context = {}
+class Login(LoginView):
     form = UserForm
-    context['form']= form
-    return render(request, 'login.html', context)
-
-def register(request): 
-    context = {}
+    template_name = "login.html"
+    
+    def get(self, request): 
+        return render(request, self.template_name, context={'form': self.form})
+    
+class Register(View):
+    template_name = "register.html"
     form = UserRegister
-    context['form']= form
-    return render(request, 'register.html', context)
+    
+    def get(self,request):
+        return render(request, self.template_name, {'form': self.form})
+    def post(self, request):
+        if request.method == "POST":
+            form = UserRegister(request.POST)
+            if form.is_valid():
+                form.save()
+                return render(request, "login.html")                
+        return render(request, self.template_name, {'form': self.form})
