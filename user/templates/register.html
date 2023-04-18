@@ -19,8 +19,21 @@
 
             {% csrf_token %}
 
-                {{ form }}
-  
+            <label class="form-label" for="form3Example4">First Name</label>
+            {{ form.first_name }}
+
+            <label class="form-label" for="form3Example4">Last Name</label>
+            {{ form.last_name }}
+
+            <label class="form-label" for="form3Example4">Email</label>
+            {{ form.email }}
+         
+            <label class="form-label" for="form3Example4">Password</label> <br>
+            {{ form.password1 }}
+
+            <label class="form-label" for="form3Example4">Confirm Password</label>
+            {{ form.password2 }}
+
 
     
   
