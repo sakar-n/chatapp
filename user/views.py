@@ -4,14 +4,19 @@ from django.views import View
 from django.contrib import messages
 from .forms import CreateUserForm, UserLoginForm
 from .models import CustomUser
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import logout
+from django.http import Http404
 
-
-class Index(View):
-    template_name = 'base.html'
+class Index(LoginRequiredMixin, View):
+    template_name="base.html"
+    
     def get(self, request):
         return render(request, self.template_name)
-        
+    
+    
 
+    
 class Register(View):
     form_class = CreateUserForm
     template_name = 'register.html'
@@ -20,11 +25,12 @@ class Register(View):
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
     
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
             # Save user to database
             form.save()
+            messages.success(request, f'Your account has been Created. Now You can login')
             return redirect('login') 
         else:
             return render(request, self.template_name, {'form': form})
@@ -33,18 +39,15 @@ class Login(View):
     form_name = UserLoginForm
     template_name = 'login.html'
     
-    def post(self, request, *args, **kwargs):
-            print("........................post")
+    def post(self, request):
             form = self.form_name(request.POST)
-            if form.is_valid():
-                print("........................valid")
-                
+            if form.is_valid():                
                 email = request.POST['email']
                 password = request.POST['password']
                 user = authenticate(request, email=email, password=password)
                 if user is not None:
                     login(request, user)
-                    return redirect('/') 
+                    return redirect('base') 
                 else:
                     messages.error(request, "Invalid username or Password")  
             else:
@@ -54,4 +57,9 @@ class Login(View):
     def get(self, request):
         form = self.form_name()
         return render(request, self.template_name, {'form': form})
-    
+
+class Logout(LoginRequiredMixin, View):
+    template_name = 'login.html'
+    def get(self, request):
+        logout(request)
+        return redirect('login')
