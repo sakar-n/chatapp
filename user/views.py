@@ -6,7 +6,6 @@ from .forms import CreateUserForm, UserLoginForm
 from .models import CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import logout
-from django.http import Http404
 
 class Index(LoginRequiredMixin, View):
     template_name="index.html"
@@ -17,9 +16,9 @@ class Index(LoginRequiredMixin, View):
     
 
     
-class Register(View):
+class Register(LoginRequiredMixin, View):
     form_class = CreateUserForm
-    template_name = 'register.html'
+    template_name = 'user_register.html'
     
     def get(self, request):
         form = self.form_class()

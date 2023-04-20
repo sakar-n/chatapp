@@ -1,15 +1,12 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from user.models import CustomUser
+from .models import Companies
 
-class CompanyRegForm(UserCreationForm):
+
+        
+class CompanyForm(forms.ModelForm):
+    company_name = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'placeholder':'NITV PVT. LTD', 'class':'form-control'}))
     
-    class Meta:
-        model = CustomUser
-        fields= ['email', 'phone', 'password1', 'password2']
-class CompanyForm(forms.Form):
-    class Meta:
-        model = CustomUser
+    class  Meta:
+        model = Companies 
         fields= ['company_name']
-        
-        
+    
