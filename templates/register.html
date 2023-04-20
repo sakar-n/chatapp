@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% block title %} User Register {% endblock title %}
 {% block content %}
 
 <section class="vh-100">
@@ -25,10 +24,13 @@
             <label class="form-label" for="form3Example4">Last Name</label>
             {{ form.last_name }}
 
-            <label class="form-label" for="form3Example4">Email</label>
+            <label>Email</label>
             {{ form.email }}
-         
-            <label class="form-label" for="form3Example4">Password</label> <br>
+            
+            <label class="form-label" for="form3Example4">Phone</label>
+            {{ form.phone }}
+
+            <label class="form-label" for="form3Example4">Password</label>
             {{ form.password1 }}
 
             <label class="form-label" for="form3Example4">Confirm Password</label>

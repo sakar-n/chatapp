@@ -9,7 +9,7 @@ from django.contrib.auth import logout
 from django.http import Http404
 
 class Index(LoginRequiredMixin, View):
-    template_name="base.html"
+    template_name="index.html"
     
     def get(self, request):
         return render(request, self.template_name)
@@ -47,7 +47,7 @@ class Login(View):
                 user = authenticate(request, email=email, password=password)
                 if user is not None:
                     login(request, user)
-                    return redirect('base') 
+                    return redirect('index') 
                 else:
                     messages.error(request, "Invalid username or Password")  
             else:
