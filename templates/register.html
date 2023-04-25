@@ -19,26 +19,30 @@
             {% csrf_token %}
             <label class="form-label" for="form3Example4">Company Name</label>
             {{ form.company_name }}
-            
+           
+
             <label class="form-label" for="form3Example4">Email</label>
             {{ form1.email }}
             
             <label class="form-label" for="form3Example4">Phone</label>
             {{ form1.phone }}
+            {{ error|escape }}
 
             <label class="form-label" for="form3Example4">Password</label>
             {{ form1.password1 }}
+            {{ error|escape }}
 
             <label class="form-label" for="form3Example4">Confirm Password</label>
             {{ form1.password2 }}
+            {{ error|escape }}
 
-            {% if form.errors %}
-            {% for field in form %}
+            {% if form1.errors %}
+            {% for field in form1 %}
             {% for error in field.errors %}
             {{ error|escape }}
             {% endfor %}
             {% endfor %}
-            {% for error in form.non_field_errors %}
+            {% for error in form1.non_field_errors %}
             {{ error|escape }}
             {% endfor %}
             {% endif %}
@@ -52,8 +56,8 @@
                   </label>
     
               <div class="text-center text-lg-start mt-4 pt-2">
-                <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Login </button>
-                <p class="small fw-bold mt-2 pt-1 mb-0">Already have an Account? <a href="{% url 'register' %}"
+                <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Register </button>
+                <p class="small fw-bold mt-2 pt-1 mb-0">Already have an Account? <a href="{% url 'login' %}"
                     class="link-danger"> Login </a></p>
               </div>
             </form>

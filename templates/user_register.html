@@ -1,38 +1,46 @@
 {% extends "base.html" %}
 {% block content %}
-
+<h1>Add user to {{user}}</h1>
 <section class="vh-100">
   
           <form method="POST">
            
 
             {% csrf_token %}
-
+            
             <label class="form-label" for="form3Example4">First Name</label>
-            {{ form.first_name }}
+            {{ form1.first_name }}
 
+            
             <label class="form-label" for="form3Example4">Last Name</label>
-            {{ form.last_name }}
+            {{ form1.last_name }}
 
             <label class="form-label" for="form3Example4">Email</label>
-            {{ form.email }}
+            {{ form1.email }}
             
             <label class="form-label" for="form3Example4">Phone</label>
-            {{ form.phone }}
+            {{ form1.phone }}
+
+            {% for error in field.errors %}
+            {{ error|escape }}
+            {% endfor %}
 
             <label class="form-label" for="form3Example4">Password</label>
-            {{ form.password1 }}
+            {{ form1.password1 }}
 
             <label class="form-label" for="form3Example4">Confirm Password</label>
-            {{ form.password2 }}
+            {{ form1.password2 }}
 
-            {% if form.errors %}
-            {% for field in form %}
+            <!-- <label class="form-label" for="form3Example4">Company</label>
+            {{ form2.company_name }} -->
+
+            {% if form1.errors %}
+            {% for field in form1 %}
             {% for error in field.errors %}
             {{ error|escape }}
             {% endfor %}
             {% endfor %}
-            {% for error in form.non_field_errors %}
+            {% for error in form1.non_field_errors %}
             {{ error|escape }}
             {% endfor %}
             {% endif %}
