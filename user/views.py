@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth import authenticate, login 
 from django.views import View
 from django.contrib import messages
@@ -12,10 +12,12 @@ from company.models import Companies, CompanyUser
 class Index(LoginRequiredMixin, View):
     template_name="index.html"
     def get(self, request):
+        company_name = Companies.objects.get(user_id=request.user.id).company_name
         company_id = Companies.objects.get(user_id=request.user.id).company_id
         users = CompanyUser.objects.filter(company_id=company_id)
-
-        context = {"users": users}
+        context = {"users": users,
+                   "companyname": company_name,
+                   }
         return render(request, self.template_name, context)
     
     
@@ -25,11 +27,13 @@ class Register(LoginRequiredMixin, View):
     userform = CreateUserForm
     template_name = 'user_register.html'
     def get(self, request):
+        company_name = Companies.objects.get(user_id=request.user.id).company_name
         form1 = self.userform()
-        return render(request, self.template_name, {'form1': form1})
+        return render(request, self.template_name, {'form1': form1, "companyname":company_name})
     
     def post(self, request):
         form1 = self.userform(request.POST)
+        company_name = Companies.objects.get(user_id=request.user.id).company_name
         if form1.is_valid():
             user = form1.save()
             company_id = Companies.objects.get(user_id=request.user.id).company_id
@@ -37,7 +41,7 @@ class Register(LoginRequiredMixin, View):
             messages.success(request, f'User Registered Successfully.')
             return redirect('index')
         else:
-            return render(request, self.template_name, {'form1': form1})
+            return render(request, self.template_name, {'form1': form1, "companyname":company_name})
 
 class Login(View):
     form_name = UserLoginForm
@@ -71,17 +75,14 @@ class Logout(LoginRequiredMixin, View):
 class UserUpdate(LoginRequiredMixin, View):
     updateform = UserUpdateForm
     template_name = 'userupdate.html'
-    
+
     def get(self, request):
-        form1 = self.updateform()
-        return render(request, self.template_name, {'form1': form1})
-    
-    def post(self, request):
-        form1 = self.updateform(request.POST)
-        if form1.is_valid():
-            form1.save()
-            messages.success(request, 'User Updated Successfully')
-            return redirect('index')
-        else:
-            return render(request, self.template_name, {'form1': form1})
-        
+        user_data = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'email': request.user.email,
+            'phone': request.user.phone,
+        }
+        form = self.updateform(initial=user_data)
+        return render(request, self.template_name, {"form":form})
+

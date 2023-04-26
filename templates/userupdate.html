@@ -1,26 +1,26 @@
 {% extends 'base.html'%}
 {% block content %}
 
+
 <form method="POST">
     {% csrf_token %}
     <label class="form-label" for="form3Example4">First Name</label>
-    {{ form1.first_name }}
+    {{ form.first_name }}
   
     <label class="form-label" for="form3Example4">Last Name</label>
-    {{ form1.last_name }}
+    {{ form.last_name }}
   
     <label class="form-label" for="form3Example4">Email</label>
-    {{ form1.email }}
+    {{ form.email }}
   
     <label class="form-label" for="form3Example4">Phone</label>
-    {{ form1.phone }}
-  
-    <label class="form-label" for="form3Example4">Password</label>
+    {{ form.phone }}
+    <!-- <label class="form-label" for="form3Example4">Password</label>
     {{ form1.password1 }}
   
     <label class="form-label" for="form3Example4">Confirm Password</label>
-    {{ form1.password2 }}
-  
+    {{ form1.password2 }} -->
+
     {% if form1.errors %}
     {% for field in form1 %}
     {% for error in field.errors %}
