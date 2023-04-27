@@ -13,10 +13,10 @@ class Index(LoginRequiredMixin, View):
     template_name="index.html"
     def get(self, request):
         company_name = Companies.objects.get(user_id=request.user.id).company_name
-        company_id = Companies.objects.get(user_id=request.user.id).company_id
+        company_id = Companies.objects.get(user_id=request.user.id)
         users = CompanyUser.objects.filter(company_id=company_id)
-        context = {"users": users,
-                   "companyname": company_name,
+        context = { "users": users,
+                    "companyname": company_name,
                    }
         return render(request, self.template_name, context)
     
@@ -47,6 +47,10 @@ class Login(View):
     form_name = UserLoginForm
     template_name = 'login.html'
     
+    def get(self, request):
+        form = self.form_name()
+        return render(request, self.template_name, {'form': form})
+    
     def post(self, request):
             form = self.form_name(request.POST)
             if form.is_valid():                
@@ -62,9 +66,6 @@ class Login(View):
                 messages.error(request, "Invalid username or Password")
             return render(request, self.template_name, {'form': self.form_name})
     
-    def get(self, request):
-        form = self.form_name()
-        return render(request, self.template_name, {'form': form})
 
 class Logout(LoginRequiredMixin, View):
     template_name = 'login.html'
@@ -76,13 +77,41 @@ class UserUpdate(LoginRequiredMixin, View):
     updateform = UserUpdateForm
     template_name = 'userupdate.html'
 
-    def get(self, request):
+    def get(self, request, user_id):
+        user = get_object_or_404(CustomUser, id=user_id)
+        
         user_data = {
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-            'email': request.user.email,
-            'phone': request.user.phone,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'phone': user.phone,
         }
         form = self.updateform(initial=user_data)
-        return render(request, self.template_name, {"form":form})
-
+        return render(request, self.template_name, {"form": form, "user": user})
+    
+    def post(self, request, user_id):
+        user = get_object_or_404(CustomUser, id=user_id)
+        form = self.updateform(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('index')
+        
+        else:
+            return render(request, self.template_name, {"form": form, "user": user})
+        
+class UserDelete(LoginRequiredMixin, View):
+    template_name = "deleteuser.html"
+    def get(self, request, user_id):
+        user = get_object_or_404(CustomUser, id= user_id)
+        return render(request, self.template_name, {"user": user})
+        
+    def post(self, request, user_id):
+        user = get_object_or_404(CustomUser, id= user_id)
+        if request.method == "POST":
+            user.delete()
+            messages.success(request, "User deleted successfully")
+            return redirect("index")
+        else:
+            return render(request, self.template_name, {"user": user})
+    
+    

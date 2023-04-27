@@ -151,12 +151,12 @@
         <td> {{ user.user.email }}</td>
         <td> <span class="badge badge-success rounded-pill d-inline">Active</span> </td>
         <td>
-        <a type="button" href="{% url 'userupdate' %}" class="btn btn-link btn-sm btn-rounded">
+        <a type="button" href="{% url 'update_user' user.user.id %}" class="btn btn-link btn-sm btn-rounded">
           Edit
         </a>
-        <button type="button" class="btn btn-link btn-sm btn-rounded">
+        <a type="action"  href="{% url 'delete_user' user.user.id%}"  class="btn btn-link btn-sm btn-rounded">
           Delete
-        </button>
+        </a>
         </td>
     </tr>
 {% endfor %}
