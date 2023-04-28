@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect, get_object_or_404
+from django.shortcuts import render,redirect, get_object_or_404 
 from django.contrib.auth import authenticate, login 
 from django.views import View
 from django.contrib import messages
@@ -11,14 +11,20 @@ from company.models import Companies, CompanyUser
 
 class Index(LoginRequiredMixin, View):
     template_name="index.html"
+    template_name1="userindex.html"
     def get(self, request):
-        company_name = Companies.objects.get(user_id=request.user.id).company_name
-        company_id = Companies.objects.get(user_id=request.user.id)
-        users = CompanyUser.objects.filter(company_id=company_id)
-        context = { "users": users,
-                    "companyname": company_name,
+        # print(request.user.id)
+        try:
+            company_name = Companies.objects.get(user_id=request.user.id).company_name
+            company_id = Companies.objects.get(user_id=request.user.id)
+            users = CompanyUser.objects.filter(company_id=company_id)
+            context = { "users": users,
+                        "companyname": company_name,
                    }
-        return render(request, self.template_name, context)
+            return render(request, self.template_name, context)
+        except:
+            return render(request, self.template_name1)
+
     
     
 
@@ -94,6 +100,7 @@ class UserUpdate(LoginRequiredMixin, View):
         form = self.updateform(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            messages.success(request, "User Updated Successfully")
             return redirect('index')
         
         else:

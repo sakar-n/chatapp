@@ -10,7 +10,7 @@
     </ul>
       {% endif %} 
 
-      <!-- Navbar -->
+    <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <!-- Container wrapper -->
   <div class="container-fluid">
@@ -42,9 +42,6 @@
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <a class="nav-link" href="#">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'user_register'%}"> Add User </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Projects</a>
@@ -109,7 +106,7 @@
         </a>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
           <li>
-            <a class="dropdown-item" href="{% url 'companyupdate'%}">Update Profile</a>
+            <a class="dropdown-item" href="{% url 'update_user' user.id %}">Update Profile</a>
           </li>
           <li>
             <a class="dropdown-item" href="#" >Settings</a>
@@ -126,38 +123,9 @@
 </nav>
 <!-- Navbar -->
 
-  <h1 class="align-middle  mb-0">Welcome {{ companyname }} {{user.first_name}}</h1><br><br>
+  <h1 class="align-middle  mb-0">Welcome {{user.first_name}}</h1><br><br>
 
 
-
-<h4>List Of Users </h4>
-  <table  class="table align-middle mb-0 bg-white">
-    <thead class="bg-light">
-      <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-{% for user in users %}
-    <tr>
-        <td> {{ user.user.first_name }}</td>
-        <td> {{ user.user.last_name }}</td>
-        <td> {{ user.user.email }}</td>
-        <td> <span class="badge badge-success rounded-pill d-inline">Active</span> </td>
-        <td>
-        <a type="button" href="{% url 'update_user' user.user.id %}" class="btn btn-link btn-sm btn-rounded">
-          Edit
-        </a>
-        <a type="action"  href="{% url 'delete_user' user.user.id%}"  class="btn btn-link btn-sm btn-rounded">
-          Delete
-        </a>
-        </td>
-    </tr>
-{% endfor %}
-</ul>
 {% else %}
 <a href="{% url 'login' %}"> You are not login please login </a>
 {% endif %}
