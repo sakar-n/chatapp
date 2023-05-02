@@ -1,12 +1,10 @@
-from django.shortcuts import render,redirect, get_object_or_404 
-from django.contrib.auth import authenticate, login 
+from django.shortcuts import render,redirect, get_object_or_404, HttpResponse
 from django.views import View
 from django.contrib import messages
 from .forms import CreateUserForm, UserLoginForm, UserUpdateForm
 from .models import CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import logout
-from company.forms import CompanyForm
+from django.contrib.auth import login,  logout, authenticate
 from company.models import Companies, CompanyUser
 
 class Index(LoginRequiredMixin, View):
@@ -55,7 +53,10 @@ class Login(View):
     
     def get(self, request):
         form = self.form_name()
-        return render(request, self.template_name, {'form': form})
+        if request.user.is_authenticated:
+            return redirect('/')
+        else:
+            return render(request, self.template_name, {'form': form})
     
     def post(self, request):
             form = self.form_name(request.POST)
@@ -84,17 +85,20 @@ class UserUpdate(LoginRequiredMixin, View):
     template_name = 'userupdate.html'
 
     def get(self, request, user_id):
-        user = get_object_or_404(CustomUser, id=user_id)
-        
+        company_id = Companies.objects.get(user_id=request.user.id).company_id
+        user1 = get_object_or_404(CustomUser, id=user_id)
         user_data = {
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-            'phone': user.phone,
+            'first_name': user1.first_name,
+            'last_name': user1.last_name,
+            'email': user1.email,
+            'phone': user1.phone,
         }
         form = self.updateform(initial=user_data)
-        return render(request, self.template_name, {"form": form, "user": user})
-    
+        if get_object_or_404(CompanyUser, user_id = user1, company_id = company_id):
+            return render(request, self.template_name, {"form": form, "user": user1})
+        else:
+             return HttpResponse('You have no authority to this page')
+      
     def post(self, request, user_id):
         user = get_object_or_404(CustomUser, id=user_id)
         form = self.updateform(request.POST, instance=user)
@@ -110,7 +114,12 @@ class UserDelete(LoginRequiredMixin, View):
     template_name = "deleteuser.html"
     def get(self, request, user_id):
         user = get_object_or_404(CustomUser, id= user_id)
-        return render(request, self.template_name, {"user": user})
+        company_id = Companies.objects.get(user_id=request.user.id).company_id
+        if get_object_or_404(CompanyUser, user_id = user, company_id = company_id):
+           return render(request, self.template_name, {"user": user})
+        else:
+            return HttpResponse('You have no authority to this page')
+        
         
     def post(self, request, user_id):
         user = get_object_or_404(CustomUser, id= user_id)

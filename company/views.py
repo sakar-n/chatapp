@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import CompanyForm, CreateCompanyForm, CompanyUpdateForm, UserUpdateForm
-from user.models import CustomUser
+from .forms import CompanyForm, CreateCompanyForm, CompanyUpdateForm, UserUpdateForm, AddProjectForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Companies
 from django.contrib import messages
 # Create your views here.
@@ -60,3 +60,19 @@ class CompanyUpadate(View):
             else:
                 messages.error(request, 'Invalid Inputs')
                 return render(request, self.template_name, {'form1':form1, 'form2':form2})
+            
+class AddProject(LoginRequiredMixin, View):
+    projectform = AddProjectForm
+    template_name = "project.html"
+    def get(self, request):
+        return render(request, self.template_name, {'form':self.projectform})
+    
+    def post(self, request):
+        form = self.projectform(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Project Added Successfully")
+            return redirect('project')
+        else:
+            messages.error(request, 'Project Cannot Be Added')
+            return render(request, self.template_name, {'form':form})

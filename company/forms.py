@@ -1,5 +1,5 @@
 from django import forms
-from .models import Companies
+from .models import Companies, Project
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from user.models import CustomUser
         
@@ -36,3 +36,10 @@ class UserUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields= ['phone', 'email']
+        
+class AddProjectForm(forms.ModelForm):
+    project_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'placeholder':'Project Name','class':'from-control'}))
+    
+    class Meta:
+        model = Project
+        fields = ['project_name']

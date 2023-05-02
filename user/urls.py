@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import Register, Login, Index, Logout, UserUpdate, UserDelete
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
 
 urlpatterns=[
     path('', login_required(Index.as_view()), name='index'),
