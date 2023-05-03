@@ -2,6 +2,12 @@
 {% block content %}
 <h1>Add user to {{ companyname }}</h1>
 <section class="vh-100">
+
+  {% for message in messages %}
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+   <div> {{ message }} </div>
+  </div>
+  {% endfor %}
   
           <form method="POST">
            

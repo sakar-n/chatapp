@@ -1,15 +1,15 @@
 {% extends "base.html" %}
+
 {% block content %}
 
 {% if user.is_authenticated %}
-{% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-    </ul>
-      {% endif %} 
 
+  {% for message in messages %}
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+   <div> {{ message }} </div>
+  </div>
+  {% endfor %}
+  
       <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <!-- Container wrapper -->
@@ -125,6 +125,9 @@
   <!-- Container wrapper -->
 </nav>
 <!-- Navbar -->
+  
+        
+        
 
   <h1 class="align-middle  mb-0">Welcome {{ companyname }} {{user.first_name}}</h1><br><br>
 

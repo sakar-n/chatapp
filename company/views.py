@@ -21,15 +21,21 @@ class CompanyReg(View):
     def post(self, request):
         form1 = self.reg_form(request.POST)
         form = self.company_form(request.POST)
+        
         if form1.is_valid() and form.is_valid():
-            user = form1.save() 
-            company = form.save(commit=False)  
-            company.user_id = user.id
-            company.save() 
-            messages.success(request, f'User Registered Successfully.')
-            return redirect('/login')
+            compnay_input = form.cleaned_data['company_name']
+            if Companies.objects.filter(company_name=compnay_input).exists():
+                messages.error(request, 'Company with this name already exist.')
+                return render(request, self.template_name, {'form1': form1, 'form': form})
+            else:
+                user = form1.save() 
+                company = form.save(commit=False)  
+                company.user_id = user.id
+                company.save() 
+                messages.success(request, 'User Registered Successfully.')
+                return redirect('/login')
         else:
-            return render(request, self.template_name, {'form1': form1, 'form': form})
+                return render(request, self.template_name, {'form1': form1, 'form': form})
         
 class CompanyUpadate(View):
     companydetails = UserUpdateForm
