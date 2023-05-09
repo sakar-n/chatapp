@@ -12,12 +12,11 @@
                 <h3 class="lead fw-normal mb-0 me-3">Welcome to the NITV Ticketing System</h3>
               </div>
               
-              {% for message in messages %}
-              <div class="alert {{ message.tags }} alert-dismissible" role="alert">
-               <div> {{ message }} </div>
-              </div>
-              {% endfor %}
-              
+                {% for message in messages %}
+  <div class="alert {{ message.tags }} alert-dismissible" role="alert">
+   <div> {{ message }} </div>
+  </div>
+  {% endfor %}
             <form method="POST">
              
   

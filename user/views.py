@@ -42,7 +42,7 @@ class Register(LoginRequiredMixin, View):
             user = form1.save()
             company_id = Companies.objects.get(user_id=request.user.id).company_id
             CompanyUser.objects.create(user_id=user.id, company_id=company_id)
-            messages.success(request, f'User Registered Successfully.')
+            messages.success(request, 'User Registered Successfully.')
             return redirect('index')
         else:
             return render(request, self.template_name, {'form1': form1, "companyname":company_name})
@@ -126,5 +126,4 @@ class UserDelete(LoginRequiredMixin, View):
             return redirect("index")
         else:
             return render(request, self.template_name, {"user": user})
-    
     

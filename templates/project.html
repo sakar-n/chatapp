@@ -14,9 +14,41 @@
 <form method="POST">
     {% csrf_token %}
     {{form}}
-    <button type="submit">Add Project</button>
-</form>
+    <button type="submit" class="btn btn-primary" >Add Project</button>
+  </form>
+<h4>List of Projects </h4>
+
+  <table  class="table align-middle mb-0 bg-white">
+    <thead class="bg-light">
+      <tr>
+        <th>Project Name</th>
+        <td>Registered Date</td>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    
+{% for project in projects%}
+
+<tr>
+  <td> {{project.project_name}}</td>
+  <td> {{project.created_at}}</td>
+  <td>
 
 
+ <!-- Button trigger modal -->
+ <a type="action"  href="{% url 'project_update' project.project_id%}"  class="btn btn-link btn-sm btn-rounded">
+  Edit
+</a>
+  <a type="action"  href="{% url 'delete_project' project.project_id%}"  class="btn btn-link btn-sm btn-rounded">
+    Delete
+  </a>
+  
+  <a type="action" href="{% url 'project_user' project.project_id project.company_id %}" class="btn btn-link btn-sm btn-rounded">
+    Assign User
+</a>
 
+</td>
+</tr>
+
+{% endfor %}
 {% endblock content %}

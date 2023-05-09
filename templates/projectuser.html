@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+ <div> {{ message }} </div>
+</div>
+{% endfor %}
+
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit" class="btn btn-primary" >Assign User</button>
+</form>
+{% endblock content%}

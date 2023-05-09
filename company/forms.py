@@ -1,5 +1,7 @@
+from typing import Any, Mapping, Optional, Type, Union
 from django import forms
-from .models import Companies, Project
+from django.forms.utils import ErrorList
+from .models import Companies, Project, ProjectUser, CompanyUser
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from user.models import CustomUser
         
@@ -43,3 +45,16 @@ class AddProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['project_name']
+    
+class ProjectAssignForm(forms.Form):
+    user_id = forms.ModelChoiceField(queryset=CompanyUser.objects.all())
+
+    def __init__(self, *args, **kwargs):
+        company_id = kwargs.pop('company_id')
+        super(ProjectAssignForm, self).__init__(*args, **kwargs)
+        self.fields['user_id'].queryset = CompanyUser.objects.filter(company_id=company_id)
+        self.fields['user_id'].label_from_instance = self.get_user_email
+
+    def get_user_email(self, instance):
+        return instance.user.email
+    

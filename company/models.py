@@ -20,3 +20,8 @@ class Project(models.Model):
 class CompanyUser(models.Model):
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null= False)
+    
+class ProjectUser(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null= False)
+    
