@@ -1,2 +1,3 @@
 .venv
-__pycahes
+__pycahes__
+.env
