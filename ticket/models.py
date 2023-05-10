@@ -1,10 +1,12 @@
 from django.db import models
 from user.models import CustomUser
+from company.models import Companies
 
 # Create your models here.
 
 class Priorities(models.Model):
     priority_id = models.AutoField(primary_key=True)
+    company = models.ForeignKey(Companies, null=False, on_delete=models.CASCADE)
     priority_name = models.CharField(max_length=30, null=False, blank=False)
     
 class Tickets(models.Model):

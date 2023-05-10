@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
+<body>
 {% if user.is_authenticated %}       
         
 {% for message in messages %}
@@ -30,9 +30,9 @@
   <!-- Collapsible wrapper -->
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <!-- Navbar brand -->
-    <a class="navbar-brand mt-2 mt-lg-0" href="#">
+    <a class="navbar-brand mt-2 mt-lg-0" href="{% url 'index' %}">
       <img
-        src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
+        src="https://cdn-icons-png.flaticon.com/512/61/61972.png"
         height="15"
         alt="MDB Logo"
         loading="lazy"
@@ -41,7 +41,7 @@
     <!-- Left links -->
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li class="nav-item">
-        <a class="nav-link" href="#">Dashboard</a>
+        <a class="nav-link" href="{% url 'index' %}">Dashboard</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'user_register'%}"> Add User </a>
@@ -49,46 +49,14 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'project'%}">Projects</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'ticket_management'%}">Tickets</a>
+      </li>
     </ul>
     <!-- Left links -->
   </div>
   <!-- Collapsible wrapper -->
 
-  <!-- Right elements -->
-  <div class="d-flex align-items-center">
-    <!-- Icon -->
-    <a class="text-reset me-3" href="#">
-      <i class="fas fa-shopping-cart"></i>
-    </a>
-
-    <!-- Notifications -->
-    <div class="dropdown">
-      <a
-        class="text-reset me-3 dropdown-toggle hidden-arrow"
-        href="#"
-        id="navbarDropdownMenuLink"
-        role="button"
-        data-mdb-toggle="dropdown"
-        aria-expanded="false"
-      >
-        <i class="fas fa-bell"></i>
-        <span class="badge rounded-pill badge-notification bg-danger">1</span>
-      </a>
-      <ul
-        class="dropdown-menu dropdown-menu-end"
-        aria-labelledby="navbarDropdownMenuLink"
-      >
-        <li>
-          <a class="dropdown-item" href="#">Some news</a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">Another news</a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </li>
-      </ul>
-    </div>
     <!-- Avatar -->
     <div class="dropdown">
       <a
@@ -100,8 +68,8 @@
         aria-expanded="false"
       >
         <img
-          src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
-          class="rounded-circle"
+          src="https://i.stack.imgur.com/YQu5k.png"
+          class="rounded-circle fa fa-user"
           height="25"
           alt="Black and White Portrait of a Man"
           loading="lazy"
@@ -110,9 +78,6 @@
       <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
         <li>
           <a class="dropdown-item" href="{% url 'companyupdate'%}">Update Profile</a>
-        </li>
-        <li>
-          <a class="dropdown-item" href="#" >Settings</a>
         </li>
         <li>
           <a class="dropdown-item" href="{% url 'logout'%}">Logout</a>
@@ -127,13 +92,14 @@
 <!-- Navbar -->
 
 
-  <h1 class="align-middle  mb-0">Welcome {{ companyname }} {{user.first_name}}</h1><br><br>
+<div class="align-middle"><br>
+  <h1 class="text-center">Welcome {{ companyname }} {{user.first_name}}</h1>
+</div><br><br>
 
-
-
-<h4>List Of Users </h4>
-  <table  class="table align-middle mb-0 bg-white">
-    <thead class="bg-light">
+<h4>List Of Users </h4><br>
+<table id="myTable" class="table table-striped table-bordered" width="100%">
+  <!-- <table  id="example" class="table align-middle mb-0 bg-white"> -->
+    <thead>
       <tr>
         <th>First Name</th>
         <th>Last Name</th>
@@ -159,12 +125,13 @@
         </a>
         </td>
     </tr>
+
 {% endfor %}
-</ul>
 {% else %}
 <a href="{% url 'login' %}"> You are not login please login </a>
 {% endif %}
-
 </table>
+
+</body>
 
 {%endblock content%}

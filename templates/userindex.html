@@ -124,7 +124,7 @@
 <!-- Navbar -->
 
   <h1 class="align-middle  mb-0">Welcome {{user.first_name}}</h1><br><br>
-  <a href="{% url 'ticket' %}"> Issue </a>
+  <a type="submit" class="btn btn-primary" href="{% url 'ticket' %}"> Issue Ticket </a>
 
 {% else %}
 <a href="{% url 'login' %}"> You are not login please login </a>

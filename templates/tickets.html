@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+{% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+ <div> {{ message }} </div>
+</div>
+{% endfor %}
+<h1> Tickets Management </h1>
+<h3> Ticket Priorities </h3>
+
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Add </button>
+</form>
+
+<h4>List Of Users </h4><br>
+  <table  class="table align-middle mb-0 bg-white">
+    <thead class="bg-light">
+      <tr>
+        <th>Project Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tr>
+        <td> </td>
+        <td>
+        <a type="button" href="#" class="btn btn-link btn-sm btn-rounded">
+          Edit
+        </a>
+        <a type="action"  href="#"  class="btn btn-link btn-sm btn-rounded">
+          Delete
+        </a>
+        </td>
+    </tr>
+{% endblock content %}

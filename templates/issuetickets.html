@@ -2,6 +2,7 @@
 {% block content %}
 
 <form method="POST">
+    {% csrf_token %}
     <label class="form-label" for="form3Example4">Subject</label>
     {{form1.subject}}<br>
 
