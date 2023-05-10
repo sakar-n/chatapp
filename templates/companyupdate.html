@@ -1,0 +1,56 @@
+{% extends 'base.html'%}
+{% block content %}
+
+<form method="POST">
+    {% csrf_token %}
+    <label class="form-label" for="form3Example4">Compnay Name</label>
+    {{ form2.company_name }}
+
+    <label class="form-label" for="form3Example4">Email</label>
+    {{ form1.email }}
+
+    <label class="form-label" for="form3Example4">Phone</label>
+    {{ form1.phone }}
+  
+    <!-- <label class="form-label" for="form3Example4">Password</label>
+    {{ form1.password }}
+  
+    <label class="form-label" for="form3Example4">Confirm Password</label>
+    {{ form1.password2 }}
+   -->
+    <!-- {% if form1.errors %}
+    {% for field in form1 %}
+    {% for error in field.errors %}
+    {{ error|escape }}
+    {% endfor %}
+    {% endfor %}
+    {% for error in form1.non_field_errors %}
+    {{ error|escape }}
+    {% endfor %}
+    {% endif %} -->
+
+    {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+      {% endif %} 
+
+    <div class="text-center text-lg-start mt-4 pt-2">
+      <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Update </button>
+    </div>
+  </form>
+
+  {% if form1.errors %}
+    {% for field in form1 %}
+    {% for error in field.errors %}
+    {{ error|escape }}
+    {% endfor %}
+    {% endfor %}
+    {% for error in form1.non_field_errors %}
+    {{ error|escape }}
+    {% endfor %}
+    {% endif %}
+
+{% endblock content %}

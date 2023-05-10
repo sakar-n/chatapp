@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
+    'company',
 
     
 ]
@@ -61,7 +62,7 @@ ROOT_URLCONF = 'core.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -89,7 +90,8 @@ DATABASES = {
         'HOST': env('DATABASE_HOST'),  
         'PORT': env('DATABASE_PORT'),  
         'OPTIONS': {  
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+            "init_command": "SET foreign_key_checks = 0;",  
         }  
     }  
 }

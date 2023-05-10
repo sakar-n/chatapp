@@ -1,0 +1,40 @@
+{% extends 'base.html'%}
+{% block content %}
+
+
+<form method="POST">
+    {% csrf_token %}
+    <label class="form-label" for="form3Example4">First Name</label>
+    {{ form.first_name }}
+  
+    <label class="form-label" for="form3Example4">Last Name</label>
+    {{ form.last_name }}
+  
+    <label class="form-label" for="form3Example4">Email</label>
+    {{ form.email }}
+  
+    <label class="form-label" for="form3Example4">Phone</label>
+    {{ form.phone }}
+    <!-- <label class="form-label" for="form3Example4">Password</label>
+    {{ form1.password1 }}
+  
+    <label class="form-label" for="form3Example4">Confirm Password</label>
+    {{ form1.password2 }} -->
+
+    {% if form.errors %}
+    {% for field in form %}
+    {% for error in field.errors %}
+    {{ error|escape }}
+    {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+    {{ error|escape }}
+    {% endfor %}
+    {% endif %}
+  
+    <div class="text-center text-lg-start mt-4 pt-2">
+      <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Register </button>
+    </div>
+  </form>
+
+{% endblock content %}
