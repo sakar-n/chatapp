@@ -24,4 +24,7 @@ class CompanyUser(models.Model):
 class ProjectUser(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null= False)
-    
+
+class AssiciateCompany(models.Model):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False)
+    company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=False)

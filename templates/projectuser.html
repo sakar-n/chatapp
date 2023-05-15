@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
+
 {% for message in messages %}
 <div class="alert {{ message.tags }} alert-dismissible" role="alert">
  <div> {{ message }} </div>
@@ -11,4 +13,4 @@
     {{form}}
     <button type="submit" class="btn btn-primary" >Assign User</button>
 </form>
-{% endblock content%}
+{% endblock content %}

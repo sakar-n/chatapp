@@ -1,7 +1,6 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h1>Add user to {{ companyname }}</h1>
-<section class="vh-100">
 
   {% for message in messages %}
   <div class="alert {{ message.tags }} alert-dismissible" role="alert">
@@ -9,6 +8,14 @@
   </div>
   {% endfor %}
   
+  <div class="main-wrapper">
+    <div class="account-content">
+     <div class="container">
+      
+        
+        <div class="account-box">
+          <div class="account-wrapper">
+            <h3 class="account-title">Add Employees</h3>
           <form method="POST">
            
 
@@ -60,6 +67,11 @@
   
           </form>
        
-  </section>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+<!-- /Main Wrapper -->      
 
 {% endblock content %}

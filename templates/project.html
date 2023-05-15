@@ -16,9 +16,10 @@
     {{form}}
     <button type="submit" class="btn btn-primary" >Add Project</button>
   </form>
+  <div class="container">
 <h4>List of Projects </h4>
 
-  <table id="myTable" class="table align-middle mb-0 bg-white">
+  <table id="myTable" class="table align-middle mb-0 bg-white table-striped" >
     <thead class="bg-light">
       <tr>
         <th>Project Name</th>
@@ -51,4 +52,6 @@
 </tr>
 
 {% endfor %}
+</table>
+</div>
 {% endblock content %}

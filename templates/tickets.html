@@ -10,27 +10,61 @@
 
 <form method="POST">
     {% csrf_token %}
-    {{form}}
-    <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Add </button>
+    {{ form }}
+    <button type="submit" class="btn btn-primary btn-md" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Add </button>
 </form>
 
-<h4>List Of Users </h4><br>
-  <table  class="table align-middle mb-0 bg-white">
+
+
+<h4>List Of Priorities </h4><br>
+<div class="container">
+<div class>
+  <table  id="myTable" class="table align-middle mb-0 bg-white table-striped" >
     <thead class="bg-light">
+      
       <tr>
         <th>Project Name</th>
         <th>Actions</th>
       </tr>
     </thead>
+    {% for priority in priorities %}
     <tr>
-        <td> </td>
+        <td>{{ priority.priority_name }}</td>
         <td>
         <a type="button" href="#" class="btn btn-link btn-sm btn-rounded">
           Edit
         </a>
         <a type="action"  href="#"  class="btn btn-link btn-sm btn-rounded">
-          Delete
+          <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+  Delete
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete Priority Level</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body"> Are You Sure want to delete? </div>
+      <div class="modal-footer">
+        <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        <a type="action" href="{% url 'delete_priority' priority.priority_id %}" class="btn btn-link btn-sm btn-rounded">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+            Delete
+          </button>
+        </a>
+    </div>
+  </div>
+</div>
         </a>
         </td>
     </tr>
+    {% endfor %}
+    </table>
+  </div>
+
 {% endblock content %}

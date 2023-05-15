@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .forms import CompanyForm, CreateCompanyForm, CompanyUpdateForm, UserUpdateForm, AddProjectForm, ProjectAssignForm
+from .forms import CompanyForm, CreateCompanyForm, CompanyUpdateForm, UserUpdateForm, AddProjectForm, ProjectAssignForm, AssociateCompanyForm
 from django.contrib.auth.mixins import LoginRequiredMixin 
-from .models import Companies, Project, CompanyUser, ProjectUser
+from .models import Companies, Project, ProjectUser
 from django.contrib import messages
 from user.models import CustomUser
 # Create your views here.
@@ -83,9 +83,14 @@ class AddProject(LoginRequiredMixin, View):
         if form.is_valid():
             unsaveform = form.save(commit=False)
             unsaveform.company_id = company_id
-            unsaveform.save()
-            messages.success(request, "Project Added Successfully")
-            return redirect('project')
+            project_input = form.cleaned_data['project_name']
+            if Project.objects.filter(project_name = project_input, company_id=company_id).exists():
+                messages.error(request, 'This Project Already Exist in Your Company.')
+                return redirect('project')
+            else:       
+                unsaveform.save()
+                messages.success(request, "Project Added Successfully")
+                return redirect('project')
         else:
             messages.error(request, 'Project Cannot Be Added')
             return render(request, self.template_name, {'form':form, 'projects':projects})
@@ -130,7 +135,8 @@ class ProjectUpdate(View):
 class AddProjectUser(View):
     template_name = "projectuser.html"
     user_form = ProjectAssignForm
-
+    associate_compnay = AssociateCompanyForm
+    
     def get(self, request, project_id, company_id):
         form = self.user_form(company_id=company_id)
         project = get_object_or_404(Project, project_id=project_id)
@@ -152,4 +158,4 @@ class AddProjectUser(View):
         else:
             messages.error(request, "Invalid Input")
             return render(request, self.template_name, {'project': project, 'form': form})
-    
+     

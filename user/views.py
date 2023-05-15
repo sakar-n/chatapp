@@ -11,7 +11,6 @@ class Index(LoginRequiredMixin, View):
     template_name="index.html"
     template_name1="userindex.html"
     def get(self, request):
-        # print(request.user.id)
         try:
             company_name = Companies.objects.get(user_id=request.user.id).company_name
             company_id = Companies.objects.get(user_id=request.user.id)
@@ -23,7 +22,6 @@ class Index(LoginRequiredMixin, View):
         except:
             return render(request, self.template_name1)
 
-    
     
 
     
@@ -109,21 +107,32 @@ class UserUpdate(LoginRequiredMixin, View):
         else:
             return render(request, self.template_name, {"form": form, "user": user})
         
-class UserDelete(LoginRequiredMixin, View):
-    template_name = "deleteuser.html"
-    def get(self, request, user_id):
-        user = get_object_or_404(CustomUser, id= user_id)
-        company_id = Companies.objects.get(user_id=request.user.id).company_id
-        if get_object_or_404(CompanyUser, user_id = user, company_id = company_id):
-           return render(request, self.template_name, {"user": user})
+# class UserDelete(LoginRequiredMixin, View):
+#     template_name = "deleteuser.html"
+#     def get(self, request, user_id):
+#         user = get_object_or_404(CustomUser, id= user_id)
+#         company_id = Companies.objects.get(user_id=request.user.id).company_id
+#         if get_object_or_404(CompanyUser, user_id = user, company_id = company_id):
+#            return render(request, self.template_name, {"user": user})
        
         
-    def post(self, request, user_id):
-        user = get_object_or_404(CustomUser, id= user_id)
-        if request.method == "POST":
-            user.delete()
-            messages.success(request, "User deleted successfully")
-            return redirect("index")
-        else:
-            return render(request, self.template_name, {"user": user})
+#     def post(self, request, user_id):
+#         user = get_object_or_404(CustomUser, id= user_id)
+#         if request.method == "POST":
+#             user.delete()
+#             messages.success(request, "User deleted successfully")
+#             return redirect("index")
+#         else:
+#             return render(request, self.template_name, {"user": user})
+    
+class UserDelete(LoginRequiredMixin, View):
+           
+    def get(self, request, user_id):
+        user = get_object_or_404(CustomUser, id = user_id)
+        company_id = Companies.objects.get(user_id=request.user.id).company_id
+        print(company_id)
+        print(user)
+        user.delete()
+        messages.success(request, "User deleted successfully")
+        return redirect("index")
     

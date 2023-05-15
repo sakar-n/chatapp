@@ -25,7 +25,7 @@ class CreateCompanyForm(UserCreationForm):
         fields= ['email', 'phone', 'password1', 'password2']
 
 class CompanyUpdateForm(forms.ModelForm):
-    company_name = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'placeholder':'NITV PVT. LTD', 'class':'form-control'}))
+    company_name = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'placeholder':'ABC PVT. LTD', 'class':'form-control'}))
     
     class  Meta:
         model = Companies 
@@ -58,3 +58,5 @@ class ProjectAssignForm(forms.Form):
     def get_user_email(self, instance):
         return instance.user.email
     
+class AssociateCompanyForm(forms.ModelForm):
+    company = forms.ModelChoiceField(queryset = Companies.objects.all())
