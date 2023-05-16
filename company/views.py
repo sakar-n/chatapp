@@ -158,4 +158,6 @@ class AddProjectUser(View):
         else:
             messages.error(request, "Invalid Input")
             return render(request, self.template_name, {'project': project, 'form': form})
-     
+
+class AssociateCompany(View):
+    tempalte_name = ''

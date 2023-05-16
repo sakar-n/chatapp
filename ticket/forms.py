@@ -8,7 +8,6 @@ class TicketForm(forms.ModelForm):
     message = forms.CharField(max_length=384000, required=True, widget=forms.Textarea(attrs={'placeholder':'Enter Message', 'class':'form-control'}))
     due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), initial=datetime.now() + timedelta(hours=48))
     priority_name = forms.ModelChoiceField(queryset=None)
-    issued_by = forms.ChoiceField()
 
     def __init__(self, *args, **kwargs):
         company_id = kwargs.pop('company_id', None)  # Retrieve company_id from kwargs
@@ -24,7 +23,7 @@ class TicketForm(forms.ModelForm):
         
         
 class AttachmentForm(forms.ModelForm):
-    attachment = forms.FileField()
+    attachment = forms.FileField( required=False)
     
     class Meta:
         model = Attachments

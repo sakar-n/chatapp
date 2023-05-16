@@ -19,17 +19,27 @@ class Ticket(View):
         return render(request, self.template_name, {"form1": form1, 'form2': self.attachmentform, "priorities": priorities})
     
     def post(self, request):
-        form1 = self.ticketform(request.POST)  # Pass the company_id to the form
-        form2 = self.ticketform(request.POST)
-        if form1.is_valid:
-            form1.save()
-        if form2.is_valid:
-            form2.save()
-            messages.success(request, 'Tickets Issue Successfully')
-            return redirect('tickets')
-        else:
-            messages.success(request, 'Invalid Input, Tickets Cannot be Issued')
-            return render(request, self.template_name, {"form1": form1, 'form2': form2})
+            user_id = request.user.id
+            company_id = CompanyUser.objects.get(user_id=request.user.id).company_id
+            priorities = Priorities.objects.filter(company_id=company_id)
+            form1 = self.ticketform(request.POST,company_id=company_id)
+            form2 = self.attachmentform(request.POST, request.FILES)     
+            if form1.is_valid():
+                ticket = form1.save(commit=False)
+                ticket.issued_by_id = request.user.id
+                ticket.priority_id = request.POST['priority_name']
+                ticket.save()
+                
+                attachment = form2.save(commit=False)
+                attachment.ticket = ticket
+                attachment.save()
+                
+                messages.success(request, 'Ticket issued successfully')
+                return redirect('ticket')
+            else:
+                messages.error(request, form1.errors)
+                return render(request, self.template_name, {"form1": form1, "form2": form2})
+       
         
     
 class AddPriority(View):
@@ -65,7 +75,3 @@ class DeletePriority(View):
         messages.success(request, "Priority Deleted Successfully")
         return redirect('ticket_management')
 
-class PriorityAPI(View):
-    def get(self, request):
-        copmany_id = CompanyUser.objects.get(copmany_id=request.user.id)
-        return redirect('ticket')

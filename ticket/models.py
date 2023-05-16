@@ -21,12 +21,12 @@ class Tickets(models.Model):
     priority = models.ForeignKey(Priorities, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
     due_date = models.DateTimeField(null=False)
-    closed_date = models.DateTimeField()
+    closed_date = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 class Attachments(models.Model):
     attachment_id =  models.AutoField(primary_key=True)
-    file = models.FileField(null=False, blank=False, unique=True)
+    file = models.FileField(upload_to="attachment/", null=True, blank=True, unique=True)
     ticket = models.ForeignKey(Tickets, on_delete=models.CASCADE)
     
 

@@ -1,8 +1,15 @@
 {% extends 'base.html'%}
 {% block content %}
 
-
-<form method="POST">
+<div class="main-wrapper">
+  <div class="account-content">
+   <div class="container">
+   
+      <div class="account-box ">
+        <div class="account-wrapper ">
+          <h3 class="account-title "> Update User</h3>
+</div>
+<form class = "p-3"method="POST">
     {% csrf_token %}
     <label class="form-label" for="form3Example4">First Name</label>
     {{ form.first_name }}
@@ -36,5 +43,11 @@
       <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Update </button>
     </div>
   </form>
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
 
 {% endblock content %}
