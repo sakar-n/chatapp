@@ -28,3 +28,4 @@ class ProjectUser(models.Model):
 class AssiciateCompany(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=False)
+    

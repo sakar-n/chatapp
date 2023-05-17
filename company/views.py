@@ -160,4 +160,4 @@ class AddProjectUser(View):
             return render(request, self.template_name, {'project': project, 'form': form})
 
 class AssociateCompany(View):
-    tempalte_name = ''
+    tempalte_name = 'projectrequest.html'

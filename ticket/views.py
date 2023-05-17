@@ -19,9 +19,7 @@ class Ticket(View):
         return render(request, self.template_name, {"form1": form1, 'form2': self.attachmentform, "priorities": priorities})
     
     def post(self, request):
-            user_id = request.user.id
             company_id = CompanyUser.objects.get(user_id=request.user.id).company_id
-            priorities = Priorities.objects.filter(company_id=company_id)
             form1 = self.ticketform(request.POST,company_id=company_id)
             form2 = self.attachmentform(request.POST, request.FILES)     
             if form1.is_valid():
@@ -29,9 +27,9 @@ class Ticket(View):
                 ticket.issued_by_id = request.user.id
                 ticket.priority_id = request.POST['priority_name']
                 ticket.save()
-                
                 attachment = form2.save(commit=False)
-                attachment.ticket = ticket
+                attachment.ticket_id = ticket.ticket_id
+                print(attachment)
                 attachment.save()
                 
                 messages.success(request, 'Ticket issued successfully')

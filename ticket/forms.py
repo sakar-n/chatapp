@@ -23,11 +23,11 @@ class TicketForm(forms.ModelForm):
         
         
 class AttachmentForm(forms.ModelForm):
-    attachment = forms.FileField( required=False)
+    file = forms.FileField(required=False)
     
     class Meta:
         model = Attachments
-        fields = ['attachment']
+        fields = ['file']
 
 class AddPrioritiesForm(forms.ModelForm):
     priority_name = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'class':'form-controller'}))

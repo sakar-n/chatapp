@@ -26,7 +26,7 @@ class Tickets(models.Model):
 
 class Attachments(models.Model):
     attachment_id =  models.AutoField(primary_key=True)
-    file = models.FileField(upload_to="attachment/", null=True, blank=True, unique=True)
+    file = models.FileField(upload_to="media/", null=True, blank=True)
     ticket = models.ForeignKey(Tickets, on_delete=models.CASCADE)
     
 
