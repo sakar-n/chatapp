@@ -43,6 +43,7 @@ class Register(LoginRequiredMixin, View):
             messages.success(request, 'User Registered Successfully.')
             return redirect('index')
         else:
+            messages.error(request, form1.errors)
             return render(request, self.template_name, {'form1': form1, "companyname":company_name})
 
 class Login(View):

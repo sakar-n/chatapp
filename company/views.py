@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponsePermanentRedirect
 from django.views import View
 from .forms import CompanyForm, CreateCompanyForm, CompanyUpdateForm, UserUpdateForm, AddProjectForm, ProjectAssignForm, AssociateCompanyForm
 from django.contrib.auth.mixins import LoginRequiredMixin 
-from .models import Companies, Project, ProjectUser
+from .models import Companies, Project, ProjectUser, AssiciateCompany
 from django.contrib import messages
 from user.models import CustomUser
 # Create your views here.
@@ -143,6 +143,7 @@ class AddProjectUser(View):
         return render(request, self.template_name, {'project': project, 'form': form})
 
     def post(self, request, project_id, company_id):
+        print(request.POST)
         form = self.user_form(request.POST, company_id=company_id)
         project = get_object_or_404(Project, project_id=project_id).project_id
         if form.is_valid():
@@ -154,10 +155,43 @@ class AddProjectUser(View):
             else:
                 ProjectUser.objects.create(project_id=project, user_id=user.id)
                 messages.success(request, "Project Assigned Successfully")
-                return redirect('project')
+                return render(request, self.template_name, {'project': project, 'form': form})
         else:
             messages.error(request, "Invalid Input")
             return render(request, self.template_name, {'project': project, 'form': form})
 
-class AssociateCompany(View):
-    tempalte_name = 'projectrequest.html'
+class Associate_Company(View):
+    template_name = 'project_request.html'
+    associteform = AssociateCompanyForm
+    
+    def get(self, request, project_id):
+        project = get_object_or_404(Project, project_id=project_id).project_id
+        form = self.associteform
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, project_id):
+        project = get_object_or_404(Project, project_id = project_id).project_id
+        form = self.associteform(request.POST)
+        if form.is_valid():
+            if AssiciateCompany.objects.filter(project_id = project_id).exists():
+                messages.error(request, 'This project already has enough company assigned')
+                return render(request, self.template_name, {'form': form})
+            else:
+                AssiciateCompany.objects.create(project_id=project_id, company_id=request.POST.get('company'))
+                messages.success(request, 'Project Request send successfully')
+                return render(request, self.template_name, {'form': form})
+        else:
+            messages.error(request, "Sorry! the process cannot be completed")
+            return render(request, self.template_name, {'form': form})
+
+class ProejctAcceptance(View):
+    template_name = "project_acceptance.html"
+    def get(self, request):
+        company = Companies.objects.get(user_id=request.user.id)
+
+        prj_requests = AssiciateCompany.objects.filter(company_id = company.company_id).select_related('project','company')
+        for req_company in prj_requests:
+            company = Companies.objects.get(company_id=req_company.project.company_id)
+        return render(request, self.template_name, {'prj_requests': prj_requests, 'company': company})
+    
+    

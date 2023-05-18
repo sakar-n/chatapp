@@ -9,6 +9,9 @@ class Companies(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.company_name
+        
 class Project(models.Model):
     project_id = models.AutoField(primary_key=True)
     project_name = models.CharField(max_length=225, null=False)
@@ -28,4 +31,5 @@ class ProjectUser(models.Model):
 class AssiciateCompany(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False)
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=False)
+    is_active = models.BooleanField(default=False)
     

@@ -1,7 +1,7 @@
 from typing import Any, Mapping, Optional, Type, Union
 from django import forms
 from django.forms.utils import ErrorList
-from .models import Companies, Project, ProjectUser, CompanyUser
+from .models import Companies, Project, ProjectUser, CompanyUser, AssiciateCompany
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from user.models import CustomUser
         
@@ -60,3 +60,7 @@ class ProjectAssignForm(forms.Form):
     
 class AssociateCompanyForm(forms.ModelForm):
     company = forms.ModelChoiceField(queryset = Companies.objects.all())
+    
+    class Meta:
+        model = AssiciateCompany
+        fields = ['company']

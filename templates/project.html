@@ -1,14 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
+
 <h1>Add Project </h1>
 
-{% if messages %}
-
-      {% for message in messages %}
-      <h6 color="red" {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</h6>
-      {% endfor %}
-    </ul>
-      {% endif %} 
 
 
 <form method="POST">
@@ -40,18 +34,43 @@
  <a type="action"  href="{% url 'project_update' project.project_id%}"  class="btn btn-link btn-sm btn-rounded">
   Edit
 </a>
-  <a type="action"  href="{% url 'delete_project' project.project_id%}"  class="btn btn-link btn-sm btn-rounded">
-    Delete
-  </a>
-  
+  <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{project.project_id}}">
+  Delete
+</button>
+
+
   <a type="action" href="{% url 'project_user' project.project_id project.company_id %}" class="btn btn-link btn-sm btn-rounded">
     Assign User
-</a>
+  </a>
+  <a type="action" href="{% url 'associate_company' project.project_id %}" class="btn btn-link btn-sm btn-rounded">
+    Assign Company
+  </a>
 
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal{{project.project_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete Priority Level</h5>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body"> Are You Sure want to delete project {{project.project_name}} ? </div>
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+          <a type="action" href="{% url 'project_update' project.project_id%}" class="btn btn-link btn-sm btn-rounded">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+              Delete
+            </button>
+          </a>
+      </div>
+    </div>
+  </div>
 </td>
 </tr>
 
 {% endfor %}
 </table>
 </div>
+
 {% endblock content %}

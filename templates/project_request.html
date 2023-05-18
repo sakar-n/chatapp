@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+ <div> {{ message }} </div>
+</div>
+{% endfor %}
+
+<div class="main-wrapper">
+  <div class="account-content">
+   <div class="container">
+    
+      
+      <div class="account-box">
+        <div class="account-wrapper">
+          <h3 class="account-title">Request Company for Project</h3>
+            <form method="POST">
+           
+                {% csrf_token %}
+                
+                {{ form }}
+                 
+               
+      
+                <div class="text-center text-lg-start mt-4 pt-2">
+                  <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Register </button>
+                </div>
+      
+              </form>
+           
+            </div>
+          </div>
+        </div>
+      </div>
+        </div>
+    <!-- /Main Wrapper -->      
+{% endblock content %}
+

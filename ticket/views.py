@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRedirect
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -73,3 +73,30 @@ class DeletePriority(View):
         messages.success(request, "Priority Deleted Successfully")
         return redirect('ticket_management')
 
+class PriorityUpdate(View):
+    template_name = 'priority_update.html'
+    updateform = AddPrioritiesForm
+    def get(self, request, priority_id):
+        priority = get_object_or_404(Priorities, priority_id=priority_id) 
+        form_data={
+            'priority_name':priority.priority_name
+        }
+        form = self.updateform(initial=form_data)
+        return render(request, self.template_name, {'form':form})
+    
+    def post(self, request, priority_id):
+        priority = get_object_or_404(Priorities, priority_id=priority_id)
+        company_id = Companies.objects.get(user_id=request.user.id).company_id
+        form = self.updateform(request.POST, instance=priority)
+        if form.is_valid():
+            unsaveform = form.save(commit=False)
+            priorityname = form.cleaned_data['priority_name']
+            if Priorities.objects.filter(company_id=company_id, priority_name = priorityname).exists():
+                messages.error(request, "This Priority level already exist in your system")
+                return render(request, self.template_name, {'form':form})
+            else:
+                unsaveform.save()
+                messages.success(request, "Priority Updated Successfully")
+                return redirect('/ticket/ticketpriorities/')
+        else:
+           return render(request, self.template_name, {'form':form})

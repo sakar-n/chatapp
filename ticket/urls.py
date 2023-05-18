@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import Ticket, AddPriority, DeletePriority
+from .views import Ticket, AddPriority, DeletePriority, PriorityUpdate
 
 urlpatterns=[
-    path('ticket/',Ticket.as_view(), name='ticket'),
+    path('',Ticket.as_view(), name='ticket'),
     path('ticketpriorities/', AddPriority.as_view(), name='ticket_management'),
-    path('priority/delete/<int:priority_id>/', DeletePriority.as_view(), name='delete_priority'),  
+    path('priority/delete/<int:priority_id>/', DeletePriority.as_view(), name='delete_priority'),
+    path('priority/update/<int:priority_id>/', PriorityUpdate.as_view(), name='update_priority'),  
 ]

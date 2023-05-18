@@ -2,14 +2,8 @@
 
 {% block content %}
 <body>
-{% if user.is_authenticated %}       
-        
-{% for message in messages %}
-<div class="alert {{ message.tags }} alert-dismissible" role="alert">
- <div> {{ message }} </div>
-</div>
-{% endfor %}
 
+{% if user.is_authenticated %}       
 
 
 <div class="align-middle"><br>
