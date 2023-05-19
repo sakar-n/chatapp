@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponsePe
 from django.views import View
 from .forms import CompanyForm, CreateCompanyForm, CompanyUpdateForm, UserUpdateForm, AddProjectForm, ProjectAssignForm, AssociateCompanyForm
 from django.contrib.auth.mixins import LoginRequiredMixin 
-from .models import Companies, Project, ProjectUser, AssiciateCompany
+from .models import Companies, Project, ProjectUser, AssiciateCompany, ForeignUser
 from django.contrib import messages
 from user.models import CustomUser
 # Create your views here.
@@ -143,7 +143,6 @@ class AddProjectUser(View):
         return render(request, self.template_name, {'project': project, 'form': form})
 
     def post(self, request, project_id, company_id):
-        print(request.POST)
         form = self.user_form(request.POST, company_id=company_id)
         project = get_object_or_404(Project, project_id=project_id).project_id
         if form.is_valid():
@@ -173,7 +172,7 @@ class Associate_Company(View):
         project = get_object_or_404(Project, project_id = project_id).project_id
         form = self.associteform(request.POST)
         if form.is_valid():
-            if AssiciateCompany.objects.filter(project_id = project_id).exists():
+            if AssiciateCompany.objects.filter(project_id = project_id, is_active=True).exists():
                 messages.error(request, 'This project already has enough company assigned')
                 return render(request, self.template_name, {'form': form})
             else:
@@ -194,4 +193,46 @@ class ProejctAcceptance(View):
             company = Companies.objects.get(company_id=req_company.project.company_id)
         return render(request, self.template_name, {'prj_requests': prj_requests, 'company': company})
     
+    from django.shortcuts import get_object_or_404
+
+    def post(self, request):    
+        company = Companies.objects.get(user_id=request.user.id)
+        prj_requests = AssiciateCompany.objects.filter(company_id=company.company_id)
+        
+        if request.method == 'POST':
+            request_id = request.POST.get('request_id')  # Get the request ID from the POST data
+            prj_request = get_object_or_404(AssiciateCompany, id=request_id)  # Retrieve the specific request
+            # Update the is_active field to False
+            prj_request.is_active = True
+            prj_request.save()
+            messages.success(request, "Project collaboration Accepted.")
+            return redirect('project_accept')
+        return render(request, self.template_name, {'prj_requests': prj_requests, 'company': company})
+
     
+class RejectProject(View):
+    def get(self, request, id):
+        company = Companies.objects.get(user_id=request.user.id)
+        prj_requests = AssiciateCompany.objects.filter(company_id = company.company_id, id=id)
+        prj_requests.delete()
+        messages.error(request, "Project Declined ")
+        return redirect('project_accept')
+    
+class Foreign_User(View):
+    tempalte_name = "foreign_user.html"
+    foreign_user =  ProjectAssignForm
+    def get(self, request, id, company_id):
+        form = self.foreign_user(company_id=company_id)
+        return render(request, self.tempalte_name, {'form':form})
+    
+
+    def post(self, request, id, company_id):
+        form = self.foreign_user(request.POST, company_id=company_id)
+        if form.is_valid():
+            email = form.cleaned_data['user_id'].user.id
+            print(email) 
+            # user = ForeignUser.objects.get(user = email)
+            ForeignUser.objects.create(associate_company_id=company_id, user_id=email, project_id=id)
+            messages.success(request, "Project Assigned Successfully")
+        return render(request, self.tempalte_name, {'form':form})
+          

@@ -2,11 +2,6 @@
 
 {% block content %}
 
-{% for message in messages %}
-<div class="alert {{ message.tags }} alert-dismissible" role="alert">
- <div> {{ message }} </div>
-</div>
-{% endfor %}
 
 <div class="main-wrapper">
   <div class="account-content">
@@ -14,21 +9,102 @@
     
       
       <div class="account-box">
-        <div class="account-wrapper">
-          <h3 class="account-title">Project Request</h3>
+        <div class="account-wrapper ">
+          <h3 class="account-title ">Project Request</h3>
 
             {% for request in prj_requests %}
+            {% if request.is_active is False %}
            <h1> {{ company.company_name }} 
             <h4> Wants to connect with your company
-             for the collobration in  {{ request.project.project_name }} project <h4>
-           <a class="btn btn btn-primary">Accept</a>
-           <a class="btn btn btn-danger">Ignore</a>
-            {% endfor %}
+             for the collobration in project <h4>
+            <h3> Project Name: {{ request.project.project_name }}</h3>
+            
+            <form method="post" action="{% url 'project_accept' %}">
+              {% csrf_token %}
+              <input type="hidden" name="request_id" value="{{ request.id }}">
+              <button type="submit" class="btn btn-primary" data-mdb-toggle="modal">Accept</button>
+    
+            <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{request.id}}">
+                Decline
+            </button>
+
+
+            </form>
+            {% endif %}
+        
+        
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal{{request.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Accept Project</h5>
+                      <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"> Are You Sure want to Decline {{ request.project.project_name }} from {{ company.company_name }}  ? </div>
+                    <div class="modal-footer">
+                      <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                      <a type="action" href="{% url 'decline_project' request.id %}" class="btn btn-link btn-sm btn-rounded">
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+                          Decline
+                        </button>
+                      </a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-        </div>
-    <!-- /Main Wrapper -->      
-{% endblock content %}
+
+        {% endfor %}
+       
+    <!-- /Main Wrapper --> 
+
+    <div class="align-middle"><br>
+    </div>
+  
+    <div class="container">
+    <h4>Your Involved Projects </h4><br>
+    
+    <table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">
+      <!-- <table  id="example" class="table align-middle mb-0 bg-white"> -->
+        <thead class="bt-5">
+          <tr>
+            <th>Project Owner</th>
+            <th>Project Name</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+   
+        {% for request in prj_requests %}
+        {% if request.is_active %}
+        <tr>
+            <td>{{ company.company_name }} </td>
+            <td> {{ request.project.project_name }}</td>
+            <td> <span class="badge badge-success rounded-pill d-inline">Active</span> </td>
+            <td>
+            <a type="button" href="{% url 'foreign_user' request.id request.company_id %}" class="btn btn-link btn-sm btn-rounded">
+              Add User
+            </a>
+
+            <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{request.id}}">
+                Delete
+            </button>
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %} 
+        </tbody>
+              <!-- Button trigger modal -->
+            
+            
+      
+
+    </table>
+    </div>
+   </div>
+    {% endblock content %}
 

@@ -1,7 +1,7 @@
-from typing import Any, Mapping, Optional, Type, Union
+# from typing import Any, Mapping, Optional, Type, Union
 from django import forms
 from django.forms.utils import ErrorList
-from .models import Companies, Project, ProjectUser, CompanyUser, AssiciateCompany
+from .models import Companies, Project, ProjectUser, CompanyUser, AssiciateCompany, ForeignUser
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from user.models import CustomUser
         
