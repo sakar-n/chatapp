@@ -6,6 +6,8 @@ from .models import CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login,  logout, authenticate
 from company.models import Companies, CompanyUser
+from ticket.models import Tickets
+from django.contrib.auth.views import PasswordResetView,PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView
 
 class Index(LoginRequiredMixin, View):
     template_name="index.html"
@@ -20,7 +22,8 @@ class Index(LoginRequiredMixin, View):
                    }
             return render(request, self.template_name, context)
         except:
-            return render(request, self.template_name1)
+            tickets = Tickets.objects.filter(issued_by_id=request.user.id)
+            return render(request, self.template_name1, {'tickets':tickets})
 
     
 

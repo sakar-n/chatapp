@@ -10,5 +10,5 @@ urlpatterns=[
     path('requestcompany/<int:project_id>/', Associate_Company.as_view(), name='associate_company'),
     path('projectacceptance/', ProejctAcceptance.as_view(), name='project_accept'),
     path('project/decline/<int:id>', RejectProject.as_view(), name='decline_project'),
-    path('project/add/<int:id>/<int:company_id>', Foreign_User.as_view(), name='foreign_user'),
+    path('project/add/<int:id>/<int:company_id>/<int:project_id>', Foreign_User.as_view(), name='foreign_user'),
 ]

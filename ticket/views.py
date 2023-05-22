@@ -3,29 +3,31 @@ from django.views import View
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .forms import TicketForm, AttachmentForm, AddPrioritiesForm
-from company.models import Companies, CompanyUser
-from .models import Priorities
+from company.models import Companies, CompanyUser, ForeignUser
+from .models import Priorities, Project
 
 # Create your views here.
 class Ticket(View):
     template_name = 'issuetickets.html'
     ticketform = TicketForm
     attachmentform = AttachmentForm
-    
     def get(self, request):
         company_id = CompanyUser.objects.get(user_id=request.user.id).company_id
         priorities = Priorities.objects.filter(company_id=company_id)
-        form1 = self.ticketform(company_id=company_id)  # Pass the company_id to the form
+        form1 = self.ticketform(company_id=company_id, request=request)  # Pass the company_id to the form
         return render(request, self.template_name, {"form1": form1, 'form2': self.attachmentform, "priorities": priorities})
     
     def post(self, request):
             company_id = CompanyUser.objects.get(user_id=request.user.id).company_id
-            form1 = self.ticketform(request.POST,company_id=company_id)
-            form2 = self.attachmentform(request.POST, request.FILES)     
+            # request.POST['prj']=ForeignUser.objects.filter(id=request.POST['prj'])
+            form1 = self.ticketform(request.POST, company_id=company_id, request=request)
+            form2 = self.attachmentform(request.POST, request.FILES)
             if form1.is_valid():
                 ticket = form1.save(commit=False)
                 ticket.issued_by_id = request.user.id
                 ticket.priority_id = request.POST['priority_name']
+                ticket.prj_id =  request.POST['prj']
+                ticket.prj_id = Project.objects.get(pk=request.POST['prj'])
                 ticket.save()
                 attachment = form2.save(commit=False)
                 attachment.ticket_id = ticket.ticket_id
@@ -45,7 +47,7 @@ class AddPriority(View):
     priority_form = AddPrioritiesForm
     def get(self, request):
         company_id = Companies.objects.get(user_id=request.user.id).company_id
-        priority = Priorities.objects.filter(company_id=company_id, )
+        priority = Priorities.objects.filter(company_id=company_id )
         return render(request, self.template_name, {'form':self.priority_form, "priorities":priority })
     
     def post(self, request):
@@ -100,3 +102,8 @@ class PriorityUpdate(View):
                 return redirect('/ticket/ticketpriorities/')
         else:
            return render(request, self.template_name, {'form':form})
+
+class DisplayingTickets(View):
+    template_name = 'received_tickets.html'
+    def get(self, request):
+        return render(request, self.template_name,)

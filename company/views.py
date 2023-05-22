@@ -96,20 +96,11 @@ class AddProject(LoginRequiredMixin, View):
             return render(request, self.template_name, {'form':form, 'projects':projects})
 
 class ProjectDelete(View):
-    template_name = "deleteuser.html"
     def get(self, request, project_id):
         project = get_object_or_404(Project, project_id = project_id)
-        return render(request, self.template_name, {"project": project})
-       
-        
-    def post(self, request, project_id):
-        project = get_object_or_404(Project, project_id = project_id)
-        if request.method == "POST":
-            project.delete()
-            messages.success(request, "Project deleted successfully")
-            return redirect("project")
-        else:
-            return render(request, self.template_name, {"project": project})
+        project.delete()
+        messages.error(request, "Project Deleted Successfully")
+        return redirect('project')
         
 class ProjectUpdate(View):
     template_name = 'projectupdate.html'
@@ -193,7 +184,6 @@ class ProejctAcceptance(View):
             company = Companies.objects.get(company_id=req_company.project.company_id)
         return render(request, self.template_name, {'prj_requests': prj_requests, 'company': company})
     
-    from django.shortcuts import get_object_or_404
 
     def post(self, request):    
         company = Companies.objects.get(user_id=request.user.id)
@@ -221,18 +211,20 @@ class RejectProject(View):
 class Foreign_User(View):
     tempalte_name = "foreign_user.html"
     foreign_user =  ProjectAssignForm
-    def get(self, request, id, company_id):
+    def get(self, request, id, company_id, project_id):
         form = self.foreign_user(company_id=company_id)
         return render(request, self.tempalte_name, {'form':form})
     
 
-    def post(self, request, id, company_id):
+    def post(self, request, id, company_id, project_id):
         form = self.foreign_user(request.POST, company_id=company_id)
         if form.is_valid():
             email = form.cleaned_data['user_id'].user.id
-            print(email) 
             # user = ForeignUser.objects.get(user = email)
-            ForeignUser.objects.create(associate_company_id=company_id, user_id=email, project_id=id)
-            messages.success(request, "Project Assigned Successfully")
+            if ForeignUser.objects.filter(associate_company_id=company_id, user_id=email, project_id=project_id).exists():
+                messages.error(request, 'This user is already assigned to this project')
+            else:
+                ForeignUser.objects.create(associate_company_id=company_id, user_id=email, project_id=project_id)
+                messages.success(request, "Project Assigned Successfully")
         return render(request, self.tempalte_name, {'form':form})
           

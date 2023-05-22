@@ -1,3 +1,4 @@
+
 from django.db import models
 from user.models import CustomUser
 # Create your models here.
@@ -20,6 +21,9 @@ class Project(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return self.project_name
+    
 class CompanyUser(models.Model):
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null= False)
@@ -36,7 +40,11 @@ class AssiciateCompany(models.Model):
     company = models.ForeignKey(Companies, on_delete=models.CASCADE, null=False)
     is_active = models.BooleanField(default=False)
     
+    
 class ForeignUser(models.Model):
     associate_company = models.ForeignKey(AssiciateCompany, on_delete=models.CASCADE, null=False)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False)
     project = models.ForeignKey(Project, on_delete=models.CASCADE, null=False)
+    
+    def __str__(self):
+        return self.project.project_name

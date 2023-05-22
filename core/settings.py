@@ -157,3 +157,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.CustomUser'
 
 LOGIN_URL = 'login'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_HOST_USER = '7d2d4edb5b6988'
+EMAIL_HOST_PASSWORD = '8aab0a42b51769'
+EMAIL_PORT = '2525'

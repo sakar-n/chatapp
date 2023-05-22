@@ -57,7 +57,7 @@
         <div class="modal-body"> Are You Sure want to delete project {{project.project_name}} ? </div>
         <div class="modal-footer">
           <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-          <a type="action" href="{% url 'project_update' project.project_id%}" class="btn btn-link btn-sm btn-rounded">
+          <a type="action" href="{% url 'delete_project' project.project_id%}" class="btn btn-link btn-sm btn-rounded">
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
               Delete

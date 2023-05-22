@@ -1,6 +1,6 @@
 from django.db import models
 from user.models import CustomUser
-from company.models import Companies
+from company.models import Companies,Project
 
 # Create your models here.
 
@@ -17,7 +17,7 @@ class Tickets(models.Model):
     subject = models.CharField(max_length=100, null=False, blank=False )
     message = models.CharField(max_length=384000, null=False, blank=False)
     issued_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    #received_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    prj = models.ForeignKey(Project, on_delete=models.CASCADE)
     priority = models.ForeignKey(Priorities, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
     due_date = models.DateTimeField(null=False)

@@ -23,7 +23,6 @@
               {% csrf_token %}
               <input type="hidden" name="request_id" value="{{ request.id }}">
               <button type="submit" class="btn btn-primary" data-mdb-toggle="modal">Accept</button>
-    
             <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{request.id}}">
                 Decline
             </button>
@@ -86,7 +85,7 @@
             <td> {{ request.project.project_name }}</td>
             <td> <span class="badge badge-success rounded-pill d-inline">Active</span> </td>
             <td>
-            <a type="button" href="{% url 'foreign_user' request.id request.company_id %}" class="btn btn-link btn-sm btn-rounded">
+            <a type="button" href="{% url 'foreign_user' request.id request.company_id request.project.project_id %}" class="btn btn-link btn-sm btn-rounded">
               Add User
             </a>
 
