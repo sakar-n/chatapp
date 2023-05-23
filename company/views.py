@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponsePe
 from django.views import View
 from .forms import CompanyForm, CreateCompanyForm, CompanyUpdateForm, UserUpdateForm, AddProjectForm, ProjectAssignForm, AssociateCompanyForm
 from django.contrib.auth.mixins import LoginRequiredMixin 
-from .models import Companies, Project, ProjectUser, AssiciateCompany, ForeignUser
+from .models import Companies, Project, ProjectUser, AssiciateCompany, ForeignUser, CompanyUser
 from django.contrib import messages
 from user.models import CustomUser
 # Create your views here.
@@ -131,24 +131,35 @@ class AddProjectUser(View):
     def get(self, request, project_id, company_id):
         form = self.user_form(company_id=company_id)
         project = get_object_or_404(Project, project_id=project_id)
-        return render(request, self.template_name, {'project': project, 'form': form})
+        project_users = ProjectUser.objects.filter(project_id=project)
+        return render(request, self.template_name, {'project': project, 'form': form, 'project_users': project_users})
 
     def post(self, request, project_id, company_id):
         form = self.user_form(request.POST, company_id=company_id)
         project = get_object_or_404(Project, project_id=project_id).project_id
+        project_users = ProjectUser.objects.filter(project_id=project)
         if form.is_valid():
             email = form.cleaned_data['user_id'].user.email
             user = CustomUser.objects.get(email=email)
             if ProjectUser.objects.filter(project_id=project_id, user_id=user.id).exists():
                 messages.error(request, "This user is Already Assigned to this Project")
-                return render(request, self.template_name, {'project': project, 'form': form})
+                return render(request, self.template_name, {'project': project, 'form': form, 'project_users': project_users})
             else:
                 ProjectUser.objects.create(project_id=project, user_id=user.id)
                 messages.success(request, "Project Assigned Successfully")
                 return render(request, self.template_name, {'project': project, 'form': form})
         else:
             messages.error(request, "Invalid Input")
-            return render(request, self.template_name, {'project': project, 'form': form})
+            return render(request, self.template_name, {'project': project, 'form': form, 'project_users': project_users})
+        
+class DeleteProjectUser(View):    
+    def get(self, request, project_id, company_id, user_id):
+        project = get_object_or_404(Project, project_id=project_id)
+        project_users = ProjectUser.objects.filter(project_id=project, user_id = user_id)
+        project_users.delete()
+        messages.success(request, "User deleted successfully from project")
+        return redirect("project_user", project_id, company_id)
+    
 
 class Associate_Company(View):
     template_name = 'project_request.html'

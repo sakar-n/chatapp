@@ -1,0 +1,60 @@
+{% extends 'userbase.html'%}
+{% block content %}
+<h1>Your Tickets<h1>
+
+    <h4>Ticket issuesd by {{user.first_name}} </h4><br>
+
+    <table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">
+      <!-- <table  id="example" class="table align-middle mb-0 bg-white"> -->
+        <thead class="bt-5">
+          <tr>
+            <th>Subject</th>
+            <th>Project</th>
+            <th>Priority Level</th>
+            <th>Issue Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        {%for myticket in displaying_tickets%}
+        <tr>
+            <td> <h4>{{ myticket.subject }}</h4> <p>{{ myticket.message }}</p></td>
+            <td> {{ myticket.prj }}</td>
+            <td> {{ myticket.priority }}</td>
+            <td> {{ myticket.created_at }}</td>
+            <td> <span class="badge badge-danger rounded-pill d-inline"> Pending </span> </td>
+            <td>
+            <a type="action"  href="#"  class="btn btn-link btn-sm btn-rounded">
+              <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal">
+      Close
+    </button>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Priority Level</h5>
+            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body"> Are You Sure want to delete ? </div>
+          <div class="modal-footer">
+            <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+            <a type="action" href="#" class="btn btn-link btn-sm btn-rounded">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+                Delete
+              </button>
+            </a>
+        </div>
+      </div>
+    </div>
+            </a>
+    
+            </td>
+        </tr>
+    
+    {% endfor %}
+    </table>
+{% endblock content %}

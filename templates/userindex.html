@@ -44,7 +44,7 @@
           <a class="nav-link" href="#">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Projects</a>
+          <a class="nav-link" href="{% url 'my_tickets' %}">My Tickets</a>
         </li>
       </ul>
       <!-- Left links -->
@@ -104,8 +104,8 @@
     {% for ticket in tickets %}
     <tr>
         <td> {{ ticket.subject }}</td>
-        <td> {{ ticket.priority_id }}</td>
-        <td> {{ ticket.priject_id }}</td>
+        <td> {{ ticket.priority }}</td>
+        <td> {{ ticket.prj }}</td>
         <td> {{ ticket.created_at }}</td>
         <td> <span class="badge badge-success rounded-pill d-inline">Active</span> </td>
         <td>

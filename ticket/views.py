@@ -3,8 +3,8 @@ from django.views import View
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .forms import TicketForm, AttachmentForm, AddPrioritiesForm
-from company.models import Companies, CompanyUser, ForeignUser
-from .models import Priorities, Project
+from company.models import Companies, CompanyUser, ForeignUser, ProjectUser
+from .models import Priorities, Project, Tickets
 
 # Create your views here.
 class Ticket(View):
@@ -26,8 +26,7 @@ class Ticket(View):
                 ticket = form1.save(commit=False)
                 ticket.issued_by_id = request.user.id
                 ticket.priority_id = request.POST['priority_name']
-                ticket.prj_id =  request.POST['prj']
-                ticket.prj_id = Project.objects.get(pk=request.POST['prj'])
+                ticket.prj_id = request.POST['prj']
                 ticket.save()
                 attachment = form2.save(commit=False)
                 attachment.ticket_id = ticket.ticket_id
@@ -104,6 +103,9 @@ class PriorityUpdate(View):
            return render(request, self.template_name, {'form':form})
 
 class DisplayingTickets(View):
-    template_name = 'received_tickets.html'
+    template_name = 'my_tickets.html'
     def get(self, request):
-        return render(request, self.template_name,)
+        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
+        displaying_tickets = Tickets.objects.filter(prj_id=user_project_id)
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets })
+

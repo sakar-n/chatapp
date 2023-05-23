@@ -15,9 +15,9 @@ class TicketForm(forms.ModelForm):
         self.request = kwargs.pop("request")
         # Retrieve company_id from kwargs
         super().__init__(*args, **kwargs)
-        
+        project_ids = [foreign_user.project_id for foreign_user in ForeignUser.objects.filter(user_id=self.request.user)]
         # Filter priorities based on the company_id
-        self.fields['prj'].queryset = ForeignUser.objects.filter(user_id=self.request.user)
+        self.fields['prj'].queryset = Project.objects.filter(pk__in=project_ids)
 
         
         if company_id is not None:
