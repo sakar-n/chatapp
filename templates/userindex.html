@@ -2,13 +2,7 @@
 {% block content %}
 
 {% if user.is_authenticated %}
-{% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-    </ul>
-      {% endif %} 
+
 
     <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -99,6 +93,8 @@
         <th>Project</th>
         <th>Issue Date</th>
         <th>Status</th>
+        <th>Message</th>
+        <th> Action </th>
       </tr>
     </thead>
     {% for ticket in tickets %}
@@ -108,28 +104,29 @@
         <td> {{ ticket.prj }}</td>
         <td> {{ ticket.created_at }}</td>
         <td> <span class="badge badge-success rounded-pill d-inline">Active</span> </td>
-        <td>
-        <a type="button" href="#" class="btn btn-link btn-sm btn-rounded">
-          Edit
+        <td>  <a type="button" href="{% url 'message' ticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
+          Message
         </a>
+       </td>
+        <td>
         <a type="action"  href="#"  class="btn btn-link btn-sm btn-rounded">
           <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{ticket.ticket_id}}">
   Delete
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal{{ticket.ticket_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete Priority Level</h5>
+        <h5 class="modal-title" id="exampleModalLabel{{ticket.ticket_id}}">Delete Priority Level</h5>
         <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body"> Are You Sure want to delete ? </div>
+      <div class="modal-body"> Are You Sure want to delete {{ ticket.subject }}? </div>
       <div class="modal-footer">
         <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-        <a type="action" href="#" class="btn btn-link btn-sm btn-rounded">
+        <a type="action" href="{% url 'delete_ticket' ticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
             Delete

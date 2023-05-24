@@ -54,9 +54,8 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+ 
+
 
         {% endfor %}
        
@@ -64,8 +63,9 @@
 
     <div class="align-middle"><br>
     </div>
-  
+    
     <div class="container">
+
     <h4>Your Involved Projects </h4><br>
     
     <table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">
@@ -79,9 +79,10 @@
           </tr>
         </thead>
         <tbody>
-   
+
         {% for request in prj_requests %}
         {% if request.is_active %}
+        
         <tr>
             <td>{{ company.company_name }} </td>
             <td> {{ request.project.project_name }}</td>

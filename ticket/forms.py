@@ -1,6 +1,6 @@
 from django import forms
 from datetime import datetime, timedelta
-from .models import Tickets, Attachments, Priorities
+from .models import Tickets, Attachments, Priorities, MessageModel, MessageAttachments
 from company.models import CompanyUser, ForeignUser, Project
 
 class TicketForm(forms.ModelForm):
@@ -43,5 +43,17 @@ class AddPrioritiesForm(forms.ModelForm):
         fields = ['priority_name']
 
 
+class MessageForm(forms.ModelForm):
+    message = forms.CharField(max_length=384000, required=True, widget=forms.TextInput(attrs={'placeholder':'Enter Message', 'class':'form-control form-control-lg'}))
     
+    class Meta:
+        model = MessageModel
+        fields = ['message']
+        
+class MessageAttachmentForm(forms.ModelForm):
+    file = forms.FileField(required=False)
     
+    class Meta:
+        model = MessageAttachments
+        fields = ['file']
+

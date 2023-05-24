@@ -1,0 +1,46 @@
+{% extends 'userbase.html' %}
+{% block content %}
+<head>
+<style>
+.message{
+  height:50vh !important;
+  overflow-y:auto;
+}
+
+</style>
+</head>
+
+  <div class="container-fluid w-50 bg-light shadow mt-5 message">
+    {% for ticket in displaying_tickets %}
+    <h1 class="sticky-md-top bg-primary p-3" style="color:white">{{ticket.subject}}</h1>
+    {% endfor %}
+    <hr>
+    <div class="row">
+      <div class="messages h-25 col-12">
+        {% for message in displaying_message %}
+        {% if message.user_id is user.id %}
+        <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;"> {{message.message}}</p>
+        {% for attachment in displaying_attachment %}
+        {% if attachment.file %}
+      <a href="../media/{{attachment.file}}">attachment</a>
+        {% endif %}
+      {%endfor%}
+        {% else %}
+        <div class="d-flex flex-row justify-content-end">
+          <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">{{message.message}} </p>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid w-50  bg-light shadow mt-5 message">
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form1}}
+    {{form2}}
+    <button type="submit" class="btn btn-info btn-rounded float-end">Send</button>
+  </form>
+</div>
+
+  {% endblock content %}

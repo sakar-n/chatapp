@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRe
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib import messages
-from .forms import TicketForm, AttachmentForm, AddPrioritiesForm
+from .forms import TicketForm, AttachmentForm, AddPrioritiesForm, MessageForm, MessageAttachmentForm
 from company.models import Companies, CompanyUser, ForeignUser, ProjectUser
-from .models import Priorities, Project, Tickets
+from .models import Priorities, Project, Tickets, MessageModel, MessageAttachments
 
 # Create your views here.
 class Ticket(View):
@@ -109,3 +109,43 @@ class DisplayingTickets(View):
         displaying_tickets = Tickets.objects.filter(prj_id=user_project_id)
         return render(request, self.template_name, {'displaying_tickets':displaying_tickets })
 
+class Message(View):
+    template_name = 'message.html'
+    message_form = MessageForm
+    attachment = MessageAttachmentForm
+    def get(self, request, ticket_id):
+        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
+        displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
+        displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment, 'form1':self.message_form, 'form2':self.attachment })
+    
+    def post(self, request, ticket_id):
+        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
+        displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
+        displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        form1 = self.message_form(request.POST)
+        form2 = self.attachment(request.POST, request.FILES)
+        if form1.is_valid():
+            unsavedform1 = form1.save(commit=False)
+            unsavedform1.user_id = request.user.id
+            unsavedform1.ticket_id = ticket_id
+            unsavedform1.save()
+            if form2.is_valid():
+                unsavedform2 = form2.save(commit=False)
+                unsavedform2.ticket_id = ticket_id
+                unsavedform2.message_id = unsavedform1.message_id
+                unsavedform2.save()
+            messages.success(request, 'message send successfully')
+            return redirect('message', ticket_id)
+        else:
+            messages.error('Invalid Message')
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'form1':self.message_form, 'form2':self.attachment })
+        
+        
+class DeleteTicket(View):
+    def get(self, request, ticket_id):
+        tickets = Tickets.objects.filter(issued_by_id=request.user.id, ticket_id = ticket_id)
+        tickets.delete()
+        messages.success(request, "Ticekt Deleted Successfully")
+        return redirect('index')
