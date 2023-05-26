@@ -70,9 +70,11 @@ class Login(View):
                     login(request, user)
                     return redirect('index') 
                 else:
-                    messages.error(request, "Invalid username or Password")  
-            else:
-                messages.error(request, "Invalid username or Password")
+                    if not CustomUser.objects.filter(email=email).exists():
+                        messages.error(request, "Invalid email. Please enter a valid email address.")
+                    elif not CustomUser.objects.filter(email=email, password=password).exists():
+                        messages.error(request, "Incorrect password. Please enter the correct password.")
+
             return render(request, self.template_name, {'form': self.form_name})
     
 

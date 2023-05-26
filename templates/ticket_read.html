@@ -1,0 +1,30 @@
+{% extends 'userbase.html'%}
+{% block content %}
+ <style>
+    .center {
+        margin: auto;
+        width: 50%;
+
+        padding: 10px;
+    }
+</style> 
+
+    <div class="center">
+        <div class="card" style="width: 100%;">
+        {% for ticket in open_ticket %} 
+            <div class="card-body">
+                <h5 class="card-title" style="font-size:40px;">{{ticket.subject}}</h5>
+                <p class="card-text"><i>{{ticket.message}}</i></p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Author : {{ticket.issued_by.first_name}} {{ticket.issued_by.last_name}}
+                    Issued at : {{ticket.created_at}}
+                </li>
+
+            </ul>
+        {% endfor %} 
+        </div>
+    </div>
+    
+
+{% endblock content %}

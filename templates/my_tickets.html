@@ -18,45 +18,84 @@
         </thead>
         {%for myticket in displaying_tickets%}
         <tr>
-            <td> <h4>{{ myticket.subject }}</h4> <p>{{ myticket.message }}</p></td>
+          <td> <a href={% url 'view_ticket' myticket.ticket_id %}> <h4>{{ myticket.subject }}</h4> </a> <p>{{ myticket.message }}</p> </td>
             <td> {{ myticket.prj }}</td>
             <td> {{ myticket.priority }}</td>
             <td> {{ myticket.created_at }}</td>
-            <td> <span class="badge badge-danger rounded-pill d-inline"> Pending </span> </td>
+            
+            {% if myticket.closed_status  and  myticket.status %}
+            <td> <span class="badge badge-dark rounded-pill d-inline"> Closed </span> </td>
+            {% elif myticket.status  and  not myticket.closed_status %}
+              <td> <span class="badge badge-success rounded-pill d-inline"> Opened </span> </td>
+            {% else  %}
+              <td> <span class="badge badge-danger rounded-pill d-inline"> Pending </span> </td>
+            {% endif %} </td>
+
+
             <td>
-            <a type="button" href="{% url 'message' myticket.ticket_id %}" class="btn btn-primary">
+              {% if myticket.closed_status  and  myticket.status %}
+              <a type="button" href="{% url 'message' myticket.ticket_id %}" class="btn btn-primary">
                 Message
             </a>
+              {%else%}
+              {% if myticket.status %}  
+              <a type="button" href="{% url 'message' myticket.ticket_id %}" class="btn btn-primary">
+                  Message
+              </a>
+              
+              <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{myticket.ticket_id}}">
+                Close 
+              </button>
+              
               <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal">
-      Close
+              {%else%}       
+    <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{myticket.ticket_id}}">
+      Open 
     </button>
-    
+    {%endif%}
+    {%endif%}
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="exampleModal{{myticket.ticket_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Close Ticket</h5>
+            {% if not myticket.status  %}
+            <h5 class="modal-title" id="exampleModalLabel">Open Ticket</h5>
             <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body"> Are You Sure want to Close this Project ? </div>
+          <div class="modal-body"> Are You Sure want to Open this Ticket ? </div>
           <div class="modal-footer">
             <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
-            <a type="action" href="#" class="btn btn-link btn-sm btn-rounded">
+            <a type="action" href="{% url 'open_ticket' myticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
               <!-- Button trigger modal -->
               <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
-                close
+                Open
               </button>
             </a>
+              {% else %}
+              <h5 class="modal-title" id="exampleModalLabel">Close Ticket</h5>
+              <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"> Are You Sure want to Close this Ticket ? </div>
+            <div class="modal-footer">
+              <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Cancel</button>
+              <a type="action" href="{% url 'close_ticket' myticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+                  Close
+                </button>
+              </a>
+
+              {% endif %}
+            
         </div>
       </div>
     </div>
+          
             </a>
     
             </td>
         </tr>
-    
     {% endfor %}
     </table>
 {% endblock content %}

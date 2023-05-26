@@ -44,7 +44,7 @@ class AddPrioritiesForm(forms.ModelForm):
 
 
 class MessageForm(forms.ModelForm):
-    message = forms.CharField(max_length=384000, required=True, widget=forms.TextInput(attrs={'placeholder':'Enter Message', 'class':'form-control form-control-lg'}))
+    message = forms.CharField(max_length=384000, required=False, widget=forms.TextInput(attrs={'placeholder':'Enter Message', 'class':'form-control form-control-lg'}))
     
     class Meta:
         model = MessageModel

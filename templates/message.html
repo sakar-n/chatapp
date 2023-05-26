@@ -6,11 +6,15 @@
   height:50vh !important;
   overflow-y:auto;
 }
+.messagesend{
+  height:15vh !important;
+  overflow-y:auto;
+}
 
 </style>
 </head>
 
-  <div class="container-fluid w-50 bg-light shadow mt-5 message">
+  <div class="container-fluid w-50 bg-light shadow mt-5 message" id="chatview">
     {% for ticket in displaying_tickets %}
     <h1 class="sticky-md-top bg-primary p-3" style="color:white">{{ticket.subject}}</h1>
     {% endfor %}
@@ -19,10 +23,13 @@
       <div class="messages h-25 col-12">
         {% for message in displaying_message %}
         {% if message.user_id is user.id %}
+        {% if message.message != "" %}
         <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;"> {{message.message}}</p>
+        <p class="small ms-3 mb-3 rounded-3 text-muted">{{message.created_at|timesince}} ago</p>
+        {% endif %}
         {% for attachment in displaying_attachment %}
-        {% if attachment.file %}
-      <a href="../media/{{attachment.file}}">attachment</a>
+        {% if attachment.message_id is message.message_id %}
+      <a href="../../../media/{{attachment.file}}">attachment</a>
         {% endif %}
       {%endfor%}
         {% else %}
@@ -34,7 +41,7 @@
       </div>
     </div>
   </div>
-  <div class="container-fluid w-50  bg-light shadow mt-5 message">
+  <div class="container-fluid w-50  bg-light shadow mt-5 messagesend">
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{form1}}
@@ -43,4 +50,34 @@
   </form>
 </div>
 
+
+
+
+
+
+
+<script  src="https://code.jquery.com/jquery-3.6.0.min.js">
+  
+  $(document).ready(function(){
+  
+  setInterval(function(){
+      $.ajax({
+          type: 'GET',
+          url : "/message/{{ticket_id}}/",
+          success: function(response){
+              console.log(response);
+              $(".messages").empty();
+              for (var key in response.messages)
+              {
+                  var temp="<div class='container darker'><b>"+response.messages[key].user+"</b><p>"+response.messages[key].value+"</p><span class='time-left'>"+response.messages[key].date+"</span></div>";
+                  $(".messages").append(temp);
+              }
+          },
+          error: function(response){
+              alert('An error occured')
+          }
+      });
+  },1000);
+  })
+  </script>
   {% endblock content %}

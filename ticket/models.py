@@ -30,7 +30,7 @@ class Tickets(models.Model):
 class MessageModel(models.Model):
     message_id = models.AutoField(primary_key=True)
     ticket = models.ForeignKey(Tickets, on_delete=models.CASCADE)
-    message = models.CharField(max_length=384000, null=False, blank=False)
+    message = models.CharField(max_length=384000, null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     
