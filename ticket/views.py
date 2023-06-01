@@ -6,7 +6,7 @@ from .forms import TicketForm, AttachmentForm, AddPrioritiesForm, MessageForm, M
 from company.models import Companies, CompanyUser, ForeignUser, ProjectUser
 from .models import Priorities, Project, Tickets, MessageModel, MessageAttachments
 from django.core.serializers import serialize
-
+from django.http import JsonResponse
 # Create your views here.
 class Ticket(View):
     template_name = 'issuetickets.html'
@@ -110,39 +110,6 @@ class DisplayingTickets(View):
         displaying_tickets = Tickets.objects.filter(prj_id=user_project_id)
         return render(request, self.template_name, {'displaying_tickets':displaying_tickets })
 
-# class Message(View):
-#     template_name = 'message.html'
-#     message_form = MessageForm
-#     attachment = MessageAttachmentForm
-#     def get(self, request, ticket_id):
-#         user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
-#         displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
-#         displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
-#         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
-#         return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment, 'form1':self.message_form, 'form2':self.attachment })
-    
-#     def post(self, request, ticket_id):
-#         user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
-#         displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
-#         displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
-#         form1 = self.message_form(request.POST)
-#         form2 = self.attachment(request.POST, request.FILES)
-#         if form1.is_valid():
-#             unsavedform1 = form1.save(commit=False)
-#             unsavedform1.user_id = request.user.id
-#             unsavedform1.ticket_id = ticket_id
-#             unsavedform1.save()
-#             if form2.is_valid() and 'file' in request.FILES:
-#                 unsavedform2 = form2.save(commit=False)
-#                 unsavedform2.ticket_id = ticket_id
-#                 unsavedform2.message_id = unsavedform1.message_id
-#                 unsavedform2.save()
-#             return redirect('message', ticket_id)
-#         else:
-#             messages.error('Invalid Message')
-#         return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'form1':self.message_form, 'form2':self.attachment })
-
-
 class Message(View):
     template_name = 'message.html'
     message_form = MessageForm
@@ -152,11 +119,9 @@ class Message(View):
         displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
         displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
-        messagelist = serialize('json', displaying_message)
-        print(messagelist)
-        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message': messagelist, 'displaying_attachment':displaying_attachment, 'form1':self.message_form, 'form2':self.attachment })
-
-
+        user_id = request.user.id
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment, 'form1':self.message_form, 'form2':self.attachment, "ticket_id":ticket_id, "user_id": user_id})
+    
     def post(self, request, ticket_id):
         user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
         displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
@@ -177,6 +142,41 @@ class Message(View):
         else:
             messages.error('Invalid Message')
         return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'form1':self.message_form, 'form2':self.attachment })
+
+
+class GetMessage(View):
+    template_name = 'message.html'
+    message_form = MessageForm
+    attachment = MessageAttachmentForm
+    def get(self, request, ticket_id):
+        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
+        displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
+        displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
+        # messagelist = serialize('json', displaying_message)
+        # print(messagelist)
+        return JsonResponse({"messages":list(displaying_message.values()), "displaying_attachment":list(displaying_attachment.values()), "displaying_tickets":list(displaying_tickets.values()) })
+
+    # def post(self, request, ticket_id):
+    #     user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
+    #     displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
+    #     displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+    #     form1 = self.message_form(request.POST)
+    #     form2 = self.attachment(request.POST, request.FILES)
+    #     if form1.is_valid():
+    #         unsavedform1 = form1.save(commit=False)
+    #         unsavedform1.user_id = request.user.id
+    #         unsavedform1.ticket_id = ticket_id
+    #         unsavedform1.save()
+    #         if form2.is_valid() and 'file' in request.FILES:
+    #             unsavedform2 = form2.save(commit=False)
+    #             unsavedform2.ticket_id = ticket_id
+    #             unsavedform2.message_id = unsavedform1.message_id
+    #             unsavedform2.save()
+    #         return redirect('message', ticket_id)
+    #     else:
+    #         messages.error('Invalid Message')
+    #     return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'form1':self.message_form, 'form2':self.attachment })
 
         
 class DeleteTicket(View):
@@ -210,3 +210,16 @@ class TicketDetail(View):
         user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
         open_ticket = Tickets.objects.filter( ticket_id= ticket_id)
         return render(request, self.template_name, {'open_ticket': open_ticket})
+  
+def test(request):
+    return render(request, 'test.html')
+
+class Test(View):
+    message_form = MessageForm
+    attachment = MessageAttachmentForm
+    def get(self, request, ticket_id):
+        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
+        displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
+        displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
+        return render(request, 'test.html', {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'form1':self.message_form, 'form2':self.attachment ,"ticket_id":ticket_id})

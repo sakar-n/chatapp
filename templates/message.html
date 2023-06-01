@@ -17,6 +17,7 @@
   <div class="container-fluid w-50 bg-light shadow mt-5 message" id="chatview">
     {% for ticket in displaying_tickets %}
     <h1 class="sticky-md-top bg-primary p-3" style="color:white">{{ticket.subject}}</h1>
+    
     {% endfor %}
     <hr>
     <div class="row">
@@ -34,8 +35,8 @@
       {%endfor%}
         {% else %}
         <div class="d-flex flex-row justify-content-end">
-          <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">{{message.message}} </p>
-        </div>
+          <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-danger">{{message.message}} </p>
+      </div>
         {% endif %}
         {% endfor %}
       </div>
@@ -50,34 +51,48 @@
   </form>
 </div>
 
+<div class="row bg-dark">
+  <div class="messages h-25 col-12">
 
+    <div class="d-flex flex-row justify-content-end " id="first">
+    </div>
 
+  </div>
+</div>
+<ul id="display">
+</ul>
+<p>{{request.user}}</p>
 
+<script  src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- <script>
+    $(document).ready(function(response){
+    setInterval(function(response){
+        console.log(response)
+        $.ajax({
+            type: 'GET',
+            url : "{% url 'getmessage'  ticket_id  %}",
+            
+            success: function(response){
+                console.log(response)
+                console.log(response.messages.message);
+                $(".row").empty();
+                for (var key in response.messages)
+                { if(response.messages.message==u){
+                var temp="<p class='small p-2 ms-3 mb-1 rounded-3' style='background-color: #f5f6f7;'>"+response.messages[key].message+"</p>";
+                }else{
 
-
-
-<script  src="https://code.jquery.com/jquery-3.6.0.min.js">
+                }
+                    $(".row").append(temp);
+                }
+            },
+            error: function(response){
+                alert('An error occured')
+            }
+        });
+    },10000);
+    })
+    </script> -->
   
-  $(document).ready(function(){
-  
-  setInterval(function(){
-      $.ajax({
-          type: 'GET',
-          url : "/message/{{ticket_id}}/",
-          success: function(response){
-              console.log(response);
-              $(".messages").empty();
-              for (var key in response.messages)
-              {
-                  var temp="<div class='container darker'><b>"+response.messages[key].user+"</b><p>"+response.messages[key].value+"</p><span class='time-left'>"+response.messages[key].date+"</span></div>";
-                  $(".messages").append(temp);
-              }
-          },
-          error: function(response){
-              alert('An error occured')
-          }
-      });
-  },1000);
-  })
-  </script>
+
+  <!-- I can see the user in django template simply by using request.user in the same way how can I see the user in the ajax of same django template ? -->
   {% endblock content %}
