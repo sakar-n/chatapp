@@ -3,7 +3,7 @@ from django.views import View
 from django.urls import reverse_lazy
 from django.contrib import messages
 from .forms import TicketForm, AttachmentForm, AddPrioritiesForm, MessageForm, MessageAttachmentForm
-from company.models import Companies, CompanyUser, ForeignUser, ProjectUser
+from company.models import Companies, CompanyUser, ForeignUser, ProjectUser, Project, AssiciateCompany
 from .models import Priorities, Project, Tickets, MessageModel, MessageAttachments
 from django.core.serializers import serialize
 from django.http import JsonResponse
@@ -48,7 +48,7 @@ class AddPriority(View):
     def get(self, request):
         company_id = Companies.objects.get(user_id=request.user.id).company_id
         priority = Priorities.objects.filter(company_id=company_id )
-        return render(request, self.template_name, {'form':self.priority_form, "priorities":priority })
+        return render(request, self.template_name, {'form':self.priority_form, "priorities":priority, 'active_link':"ticketPriorities"})
     
     def post(self, request):
         form = self.priority_form(request.POST)
@@ -106,8 +106,8 @@ class PriorityUpdate(View):
 class DisplayingTickets(View):
     template_name = 'my_tickets.html'
     def get(self, request):
-        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
-        displaying_tickets = Tickets.objects.filter(prj_id=user_project_id)
+        user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+        displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
         return render(request, self.template_name, {'displaying_tickets':displaying_tickets })
 
 class Message(View):
@@ -115,21 +115,26 @@ class Message(View):
     message_form = MessageForm
     attachment = MessageAttachmentForm
     def get(self, request, ticket_id):
-        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
-        displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
+        user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+        displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id, ticket_id=ticket_id)
+        ramey = Tickets.objects.get(ticket_id=ticket_id)
         displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
         user_id = request.user.id
-        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment, 'form1':self.message_form, 'form2':self.attachment, "ticket_id":ticket_id, "user_id": user_id})
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment,'ramey':ramey, 'form1':self.message_form, 'form2':self.attachment, "ticket_id":ticket_id, "user_id": user_id})
     
     def post(self, request, ticket_id):
-        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
-        displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
+        user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+        displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id, ticket_id=ticket_id)
         displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
         form1 = self.message_form(request.POST)
         form2 = self.attachment(request.POST, request.FILES)
         if form1.is_valid():
             unsavedform1 = form1.save(commit=False)
+            if not unsavedform1.message and 'file' not in request.FILES:
+                messages.error(request, 'Invalid Message: Message cannot be empty')
+                return redirect('message', ticket_id)
             unsavedform1.user_id = request.user.id
             unsavedform1.ticket_id = ticket_id
             unsavedform1.save()
@@ -141,7 +146,7 @@ class Message(View):
             return redirect('message', ticket_id)
         else:
             messages.error('Invalid Message')
-        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'form1':self.message_form, 'form2':self.attachment })
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment, 'form1':self.message_form, 'form2':self.attachment })
 
 
 class GetMessage(View):
@@ -181,11 +186,12 @@ class GetMessage(View):
         
 class DeleteTicket(View):
     def get(self, request, ticket_id):
-        tickets = Tickets.objects.filter(issued_by_id=request.user.id, ticket_id = ticket_id)
-        tickets.delete()
-        messages.success(request, "Ticekt Deleted Successfully")
-        return redirect('index')
-    
+            tickets = Tickets.objects.filter(issued_by_id=request.user.id, ticket_id = ticket_id)
+            tickets.delete()
+            messages.success(request, "Ticket Deleted Successfully")
+            return redirect('index')
+
+
 class OpenTicket(View):
     def get(self, request, ticket_id):
         user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
@@ -207,10 +213,12 @@ class CloseTicket(View):
 class TicketDetail(View):
     template_name = 'ticket_read.html'
     def get(self, request, ticket_id):
-        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
-        open_ticket = Tickets.objects.filter( ticket_id= ticket_id)
-        return render(request, self.template_name, {'open_ticket': open_ticket})
-  
+            user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+            open_ticket = Tickets.objects.filter(prj_id__in=user_project_id, ticket_id=ticket_id)
+            return render(request, self.template_name, {'open_ticket': open_ticket})
+
+            
+        
 def test(request):
     return render(request, 'test.html')
 
@@ -223,3 +231,22 @@ class Test(View):
         displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
         return render(request, 'test.html', {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'form1':self.message_form, 'form2':self.attachment ,"ticket_id":ticket_id})
+    
+
+class DisplayingReceivedTickets(View):
+    template_name = 'received_ticket.html'
+    def get(self, request):
+        company_id =  Companies.objects.get(user_id = request.user.id).company_id
+        project_id = Project.objects.filter(company_id = company_id)
+        displaying_tickets = Tickets.objects.filter(prj_id__in=project_id)
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'active_link':"receivedTickets"})
+
+class DisplayingIssuedTickets(View):
+    template_name = 'issued_ticket.html'
+    def get(self, request):
+        company_id = Companies.objects.get(user_id=request.user.id).company_id
+        associate_companies = AssiciateCompany.objects.filter(company_id=company_id)
+        projects = [associate_company.project for associate_company in associate_companies]
+        displaying_tickets = Tickets.objects.filter(prj_id__in=projects)
+        return render(request, self.template_name, {'displaying_tickets': displaying_tickets, 'active_link':"IssuedTickets"})
+        

@@ -2,6 +2,11 @@
 {% load static %}
 {% block content %}
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item active"><a>Projects</a></li>
+  <li class="breadcrumb-item active"><a class="breadcrumb-item active" href="{% url 'project' %}">My Projects</a></li> 
+  <li class="breadcrumb-item">Assign User</li>
+</ul>
 
 <form method="POST">
     {% csrf_token %}
@@ -15,43 +20,45 @@
 
 <div class="container">
 
-    <h4> User of {{project_users.project_id}} Project  </h4><br>
+    <h4> User of Project {{project.project_name}} </h4><br>
 
 <table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">
   <!-- <table  id="example" class="table align-middle mb-0 bg-white"> -->
     <thead class="bt-5">
       <tr>
-        <th>Email</th>
+        <th>Name</th>
+        <th>User</th>
         <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
-{% for project_user in project_users %}
+    {% for prj in project_user %}
     <tr>
-        <td> {{ project_user.user}}</td>
+        <td>{{prj.project}} </td>
+        <td>{{prj.user}} </td>
         <td> <span class="badge badge-success rounded-pill d-inline">Active</span> </td>
         <td>
 
           <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{project_user.user_id}}">
+<button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{prj.user_id}}">
   Delete
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal{{project_user.user_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal{{prj.user_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete Priority Level</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Delete User From Project</h5>
         <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body"> Are You Sure want to delete {{project_user.user}}? </div>
+      <div class="modal-body"> Are You Sure want to remove {{prj.user.first_name}} from this Project ? </div>
       <div class="modal-footer">
         <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-        <a type="action" href="{% url 'deleteproject_user' project_user.project_id  project_user.project.company_id project_user.user_id %}" class="btn btn-link btn-sm btn-rounded">
+        <a type="action" href="{% url 'deleteproject_user' prj.project_id prj.project.company_id prj.user_id %}" class="btn btn-link btn-sm btn-rounded">
           <!-- Button trigger modal -->
           <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
-            Delete
+            Remove
           </button>
         </a>  
     </div>
@@ -61,7 +68,6 @@
 
         </td>
     </tr>
-
 {% endfor %}
 </table>
 

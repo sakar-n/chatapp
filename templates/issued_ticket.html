@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<ul class="breadcrumb">
+    <li class="breadcrumb-item active"><a>Tickets</a></li> 
+    <li class="breadcrumb-item">Issued Tickets</li>
+</ul>
+
+        <div class="account-wrapper">
+          <a href="{% url 'ticket' %}" class="account-title btn btn-primary btn-sm btn-rounded-4">ISSUE TICKET<a/>
+        </div>
+
+
+<div class="col-md-12">
+    
+<table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">
+    <!-- <table  id="example" class="table align-middle mb-0 bg-white"> -->
+      <thead class="bt-5">
+        <tr>
+          <th>Issued By</th>
+          <th>Subject</th>
+          <th>Priority Level</th>
+          <th>Project</th>
+          <th>Issue Date</th>
+          <th>Status</th>
+          <th>Message</th>
+          <th> Action </th>
+        </tr>
+      </thead>
+      {% for ticket in displaying_tickets %}
+      <tr>
+          <td>{{ticket.issued_by}}</td>
+          <td> <a href={% url 'view_ticket' ticket.ticket_id %}> {{ ticket.subject }}</a></td>
+          <td> {{ ticket.priority }}</td>
+          <td> {{ ticket.prj }}</td>
+          <td> {{ ticket.created_at }}</td>
+          {% if ticket.closed_status  and  ticket.status %}
+          <td> <span class="badge badge-dark rounded-pill d-inline"> Closed </span> </td>
+          {% elif ticket.status  and  not ticket.closed_status %}
+            <td> <span class="badge badge-success rounded-pill d-inline"> Opened </span> </td>
+          {% else  %}
+            <td> <span class="badge badge-danger rounded-pill d-inline"> Pending </span> </td>
+          {% endif %} </td>
+          <td>  <a type="button" href="{% url 'message' ticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
+            Message
+          </a>
+         </td>
+          <td>
+          <a type="action"  href="#"  class="btn btn-link btn-sm btn-rounded">
+            <!-- Button trigger modal -->
+  <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{ticket.ticket_id}}">
+    Delete
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal{{ticket.ticket_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel{{ticket.ticket_id}}">Delete Priority Level</h5>
+          <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body"> Are You Sure want to delete {{ ticket.subject }}? </div>
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+          <a type="action" href="{% url 'delete_ticket' ticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+              Delete
+            </button>
+          </a>
+      </div>
+    </div>
+  </div>
+          </a>
+  
+          </td>
+      </tr>
+  
+  {% endfor %}
+  </table>
+</div>
+
+{% endblock content %}

@@ -93,38 +93,41 @@
               <div class="sidebar-inner slimscroll">
         <div id="sidebar-menu" class="sidebar-menu">
           <ul>
-            <li class="menu-title"> 
-              <span>Main</span>
-            </li>
-            <li class="submenu">
+            <li class="submenu {% if active_link == 'index' %} active {% endif %} ">
               <a href="#"><i class="la la-dashboard"></i> <span> Dashboard</span> <span class="menu-arrow"></span></a>
               <ul style="display: none;">
-                <li><a class="active" href="{% url 'index' %}">Admin Dashboard</a></li>
+                <li><a href="{% url 'index' %}" class="{% if active_link == 'index' %} active {% endif %}">Admin Dashboard</a></li>
               </ul>
             </li>
            
             <li class="menu-title"> 
               <span>Employees</span>
             </li>
-            <li class="submenu">
-              <a href="#" class="noti-dot"><i class="la la-user"></i> <span> Employees</span> <span class="menu-arrow"></span></a>
+            <li class="submenu {% if active_link == 'addEmployee' %} active{% endif %}">
+              <a href="#"><i class="la la-user"></i> <span> Employees</span> <span class="menu-arrow"></span></a>
               <ul style="display: none;">
-                <li><a href="{% url 'user_register'%}"> Add Employees</a></li>
+                <li><a href="{% url 'user_register'%}" class ="{% if active_link == 'addEmployee' %}active{% endif %}"> Add Employees</a></li>
               </ul>
             </li>
             <!-- <li> 
               <a href="clients.html"><i class="la la-users"></i> <span>Clients</span></a>
             </li> -->
-            <li class="submenu">
+            <li class="submenu{% if active_link == 'addProjects' or active_link == 'projectRequest' or active_link == 'assignCompany'%} active{% endif %}">
               <a href="#"><i class="la la-rocket"></i> <span> Projects</span> <span class="menu-arrow"></span></a>
               <ul style="display: none;">
-                <li><a href="{% url 'project'%}">Projects</a></li>
-                <li><a href="{% url 'project_accept'%}">Project Request</a></li>
+                <li><a href="{% url 'project'%}" class ="{% if active_link == 'addProjects' or active_link == 'assignCompany' %}active{% endif %}"> My Projects</a></li>
+                <li><a href="{% url 'project_accept'%}"class ="{% if active_link == 'projectRequest' %}active{% endif %}"> Project Request</a></li>
               </ul>
             </li>
-            <li> 
-              <a href="{% url 'ticket_management'%}"><i class="la la-ticket"></i> <span>Tickets</span></a>
+            <li class="submenu{% if active_link == 'receivedTickets' or active_link == 'IssuedTickets' or active_link == 'ticketPriorities' %} active {% endif %}">
+              <a href="#"><i class="la la-ticket"></i> <span> Tickets</span> <span class="menu-arrow"></span></a>
+              <ul style="display: none;">
+                <li><a href="{% url 'received_tickets'%}" class="{% if active_link == 'receivedTickets' %}active{% endif %}">Received Tickets</a></li>
+                <li><a href="{% url 'issued_tickets'%}" class="{% if active_link == 'IssuedTickets' %}active{% endif %}">Issued Tickets</a></li>
+                <li><a href="{% url 'ticket_management'%}" class="{% if active_link == 'ticketPriorities' %}active{% endif %}">Ticket Priorities</a></li>
+              </ul>
             </li>
+
           </ul>
         </div>
               </div>

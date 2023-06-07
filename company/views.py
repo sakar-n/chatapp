@@ -74,7 +74,7 @@ class AddProject(LoginRequiredMixin, View):
     def get(self, request):
         company_id = Companies.objects.get(user_id=request.user.id)
         projects = Project.objects.filter(company_id=company_id).all()
-        return render(request, self.template_name, {'form':self.projectform, "projects":projects})
+        return render(request, self.template_name, {'form':self.projectform, "projects":projects,'active_link':"addProjects"})
     
     def post(self, request):
         form = self.projectform(request.POST)
@@ -131,26 +131,26 @@ class AddProjectUser(View):
     def get(self, request, project_id, company_id):
         form = self.user_form(company_id=company_id)
         project = get_object_or_404(Project, project_id=project_id)
-        project_users = ProjectUser.objects.filter(project_id=project)
-        return render(request, self.template_name, {'project': project, 'form': form, 'project_users': project_users})
+        project_user = ProjectUser.objects.filter(project_id= project_id)
+        return render(request, self.template_name, {'project': project, 'form': form, 'project_user': project_user, 'active_link': 'assignCompany' })
 
     def post(self, request, project_id, company_id):
         form = self.user_form(request.POST, company_id=company_id)
         project = get_object_or_404(Project, project_id=project_id).project_id
-        project_users = ProjectUser.objects.filter(project_id=project)
+        project_user = ProjectUser.objects.filter(project_id= project_id)
         if form.is_valid():
             email = form.cleaned_data['user_id'].user.email
             user = CustomUser.objects.get(email=email)
             if ProjectUser.objects.filter(project_id=project_id, user_id=user.id).exists():
                 messages.error(request, "This user is Already Assigned to this Project")
-                return render(request, self.template_name, {'project': project, 'form': form, 'project_users': project_users})
+                return render(request, self.template_name, {'project': project, 'form': form, 'project_user': project_user, 'active_link': 'assignCompany' })
             else:
                 ProjectUser.objects.create(project_id=project, user_id=user.id)
                 messages.success(request, "Project Assigned Successfully")
-                return render(request, self.template_name, {'project': project, 'form': form})
+                return render(request, self.template_name, {'project': project, 'form': form, 'project_user': project_user, 'active_link': 'assignCompany' })
         else:
             messages.error(request, "Invalid Input")
-            return render(request, self.template_name, {'project': project, 'form': form, 'project_users': project_users})
+            return render(request, self.template_name, {'project': project, 'form': form, 'project_user': project_user, 'active_link': 'assignCompany' })
         
 class DeleteProjectUser(View):    
     def get(self, request, project_id, company_id, user_id):
@@ -167,23 +167,41 @@ class Associate_Company(View):
     
     def get(self, request, project_id):
         project = get_object_or_404(Project, project_id=project_id).project_id
+        req_company = AssiciateCompany.objects.filter(project_id = project_id)
         form = self.associteform
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {'form': form, 'req_company': req_company, 'active_link': 'assignCompany'})
 
     def post(self, request, project_id):
         project = get_object_or_404(Project, project_id = project_id).project_id
+        req_company = AssiciateCompany.objects.filter(project_id = project_id)
+        company_id = Companies.objects.get(user_id=request.user.id).company_id
         form = self.associteform(request.POST)
         if form.is_valid():
             if AssiciateCompany.objects.filter(project_id = project_id, is_active=True).exists():
                 messages.error(request, 'This project already has enough company assigned')
-                return render(request, self.template_name, {'form': form})
+                return render(request, self.template_name, {'form': form, 'req_company': req_company, 'active_link': 'assignCompany'})
+            
+            elif AssiciateCompany.objects.filter(project_id = project_id, is_active=False, company_id=request.POST.get('company')).exists():
+                messages.error(request, 'Project Request already send.')
+                return render(request, self.template_name, {'form': form, 'req_company': req_company, 'active_link': 'assignCompany'})
+                
+            elif Project.objects.filter(project_id = project_id, company_id=request.POST.get('company')).exists():
+                messages.error(request, 'You cannat assign yourself into the Project')
+                return render(request, self.template_name, {'form': form, 'req_company': req_company, 'active_link': 'assignCompany'})
             else:
                 AssiciateCompany.objects.create(project_id=project_id, company_id=request.POST.get('company'))
                 messages.success(request, 'Project Request send successfully')
-                return render(request, self.template_name, {'form': form})
+                return render(request, self.template_name, {'form': form, 'req_company': req_company, 'active_link': 'assignCompany'})
         else:
             messages.error(request, "Sorry! the process cannot be completed")
-            return render(request, self.template_name, {'form': form})
+            return render(request, self.template_name, {'form': form, 'req_company': req_company, 'active_link': 'assignCompany'})
+
+class CancelProjectReq(View):
+    def get(self, request, project_id ):
+        project = AssiciateCompany.objects.get(project_id = project_id)
+        project.delete()
+        messages.success(request, "Project Request Cancelled Successfully ")
+        return redirect('associate_company', project_id)
 
 class ProejctAcceptance(View):
     template_name = "project_acceptance.html"
@@ -193,7 +211,7 @@ class ProejctAcceptance(View):
         prj_requests = AssiciateCompany.objects.filter(company_id = company.company_id).select_related('project','company')
         for req_company in prj_requests:
             company = Companies.objects.get(company_id=req_company.project.company_id)
-        return render(request, self.template_name, {'prj_requests': prj_requests, 'company': company})
+        return render(request, self.template_name, {'prj_requests': prj_requests, 'company': company, 'active_link':"projectRequest"})
     
 
     def post(self, request):    
@@ -209,6 +227,7 @@ class ProejctAcceptance(View):
             messages.success(request, "Project collaboration Accepted.")
             return redirect('project_accept')
         return render(request, self.template_name, {'prj_requests': prj_requests, 'company': company})
+
 
     
 class RejectProject(View):

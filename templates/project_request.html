@@ -3,6 +3,12 @@
 {% block content %}
 
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item active"><a>Projects</a></li> 
+  <li class="breadcrumb-item "><a href="{% url 'project' %}" style="color:grey"> My Projects</a></li>
+  <li class="breadcrumb-item">Assign Company</li>
+</ul>
+
 <div class="main-wrapper">
   <div class="account-content">
    <div class="container">
@@ -28,6 +34,74 @@
         </div>
       </div>
         </div>
+  
+        
+<div class="col-md-12">
+
+  <h4>List of Projects </h4>
+  
+    <table id="myTable" class="table align-middle mb-0 bg-white table-striped" >
+      <thead class="bg-light">
+        <tr>
+          <th>Project Name</th>
+          <th>Company Name</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      
+  {% for project in req_company%}
+  
+  <tr>
+    <td> {{project.project}}</td>
+    <td> {{project.company }}</td>
+    {%if project.is_active %}
+    <td> <span class="badge badge-success rounded-pill d-inline">Accepted</span> </td>
+    {% else %}
+    <td> <span class="badge badge-danger rounded-pill d-inline">Pending</span> </td>
+    {% endif %}
+    <td>
+  
+  
+   <!-- Button trigger modal -->
+   {%if project.is_active %}
+   <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{project.project_id}}">
+    Remove 
+  </button>
+  {%else%}
+  <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{project.project_id}}">
+    Cancel Request
+  </button>
+  {% endif %}
+
+  
+  
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal{{project.project_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Priority Level</h5>
+            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body"> Are You Sure want to abort this Request ? </div>
+          <div class="modal-footer">
+            <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+            <a type="action" href="{% url 'cancel_project_request' project.project_id%}" class="btn btn-link btn-sm btn-rounded">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+                Abort
+              </button>
+            </a>
+        </div>
+      </div>
+    </div>
+  </td>
+  </tr>
+  
+  {% endfor %}
+  </table>
+  </div>
    
 {% endblock content %}
 

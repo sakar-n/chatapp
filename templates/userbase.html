@@ -91,6 +91,7 @@
             </a>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="{% url 'logout'%}">Logout</a>
+              <a class="dropdown-item" href="{% url 'self_update' user.id %}">Update Profile</a>
             </div>
           </li>
         </ul>
@@ -137,12 +138,21 @@
 
 
     {% endif %}
-    <div class="container">
-      {% for message in messages %}
-      <div id="message" class="alert {{ message.tags }} alert-dismissible" role="alert">
-       <div> {{ message }} </div>
-      </div>
-      {% endfor %}
+    
+    {% for message in messages %}
+    <div id="message" class="alert {{ message.tags }} alert-dismissible" role="alert" style="z-index:5">
+     <div> {{ message }} </div>
+    </div>
+
+    {% endfor %}
+
+    {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ error }} </p>
+        {% endfor %}
+    {% endfor %}
+    {% endif %}
 
 
     {% block content %}

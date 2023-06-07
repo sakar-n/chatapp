@@ -19,6 +19,7 @@ class Index(LoginRequiredMixin, View):
             users = CompanyUser.objects.filter(company_id=company_id)
             context = { "users": users,
                         "companyname": company_name,
+                        "active_link":"index",
                    }
             return render(request, self.template_name, context)
         except:
@@ -34,7 +35,7 @@ class Register(LoginRequiredMixin, View):
     def get(self, request):
         company_name = Companies.objects.get(user_id=request.user.id).company_name
         form1 = self.userform()
-        return render(request, self.template_name, {'form1': form1, "companyname":company_name})
+        return render(request, self.template_name, {'form1': form1, "companyname":company_name, 'active_link':"addEmployee"})
     
     def post(self, request):
         form1 = self.userform(request.POST)
@@ -113,6 +114,33 @@ class UserUpdate(LoginRequiredMixin, View):
         else:
             return render(request, self.template_name, {"form": form, "user": user})
         
+class SelfUpdate(LoginRequiredMixin, View):
+    updateform = UserUpdateForm
+    template_name = 'userupdate.html'
+
+    def get(self, request, user_id):
+        user1 = get_object_or_404(CustomUser, id=user_id)
+        user_data = {
+            'first_name': user1.first_name,
+            'last_name': user1.last_name,
+            'email': user1.email,
+            'phone': user1.phone,
+        }
+        form = self.updateform(initial=user_data)
+        return render(request, self.template_name, {"form": form, "user": user1})
+        
+      
+    def post(self, request, user_id):
+        user = get_object_or_404(CustomUser, id=user_id)
+        form = self.updateform(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "User Updated Successfully")
+            return redirect('index')
+        
+        else:
+            return render(request, self.template_name, {"form": form, "user": user})
+        
 # class UserDelete(LoginRequiredMixin, View):
 #     template_name = "deleteuser.html"
 #     def get(self, request, user_id):
@@ -141,4 +169,4 @@ class UserDelete(LoginRequiredMixin, View):
         user.delete()
         messages.success(request, "User deleted successfully")
         return redirect("index")
-    
+

@@ -1,16 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Add Project </h1>
+<ul class="breadcrumb">
+  <li class="breadcrumb-item active"><a>Projects</a></li>
+  <li class="breadcrumb-item">My Projects</a></li> 
+</ul>
+  <div class="main-wrapper">
+    <div class="account-content">
+     <div class="container">
+     
+        <div class="account-box ">
+          <div class="account-wrapper ">
+            <h3 class="account-title "> Add New Project </h3>
+  
+            <form method="POST">
+              {% csrf_token %}
+              {{form}}
+              <button type="submit" class="btn btn-primary" >Add Project</button>
+            </form>
+            <div class="container">
 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
+<div class="col-md-12">
 
-<form method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button type="submit" class="btn btn-primary" >Add Project</button>
-  </form>
-  <div class="container">
 <h4>List of Projects </h4>
 
   <table id="myTable" class="table align-middle mb-0 bg-white table-striped" >
