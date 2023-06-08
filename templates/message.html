@@ -1,14 +1,7 @@
-
-{% extends 'userbase.html' %}
-
-
-{% block content %}
-
-			
+{% extends request.user.first_name|yesno:'userbase.html,base.html' %}
 
 
-
-  
+{%block content%}
     <!-- Chat Main Row -->
     <div class="chat-main-row container-fluid">
     
@@ -22,10 +15,7 @@
               <div class="navbar">
                 <div class="user-details mr-auto">
                   <div class="float-left user-img">
-                    <a class="avatar" href="profile.html" title="Mike Litorus">
-                      <img src="assets/img/profiles/avatar-05.jpg" alt="" class="rounded-circle">
-                      <span class="status online"></span>
-                    </a>
+                  
                   </div>
                   <div class="user-info float-left">
                     <a href="profile.html" title="Mike Litorus"><span>{{ramey.subject}}</span> <i class="typing-text"></i></a>
@@ -47,14 +37,12 @@
                           
                           {% if message.user_id is request.user.id %}
                           
-                          <div class="chat-bubble row ">
-                            <div class="chat-avatar col-1">
-                              <a href="profile.html" class="avatar">
-                                <img alt="" src="assets/img/profiles/avatar-05.jpg">
-                              </a>
-                              <p>{% if message.user.first_name %} {{message.user.first_name}} {% else %} Admin {%endif%}</p>
+                          <div class="chat-bubble d-row d-flex ">
+                            <div class="chat-avatar col-1 d-flex ">
+
+                              <p>{% if message.user.first_name %} <span class="text-primary">{{message.user.first_name}}:</span> {% else %} <span class="text-danger">Admin:</span> {%endif%}</p>
                             </div>
-                            <div class="chat-content col-11" style="max-width:100% !important">
+                            <div class="chat-content   border border-primary" style="max-width:100% !important;border-bottom-left-radius:0" >
                               <p>{{message.message}}</p>
                               {% for attachment in displaying_attachment %}
                               {% if attachment.message_id is message.message_id %}
@@ -74,17 +62,14 @@
                             </div>
                           </div>
                           {% else %}
-                          <div class="chat-bubble row">
-                            <div class="chat-avatar col-1">
-                              <a href="profile.html" class="avatar">
-                                <img alt="" src="assets/img/profiles/avatar-05.jpg">
+                          <div class="chat-bubble d-row d-flex">
+                            <div class="chat-avatar col-1 d-flex ">
     
-                              </a>
-                              <p>{% if message.user.first_name %} {{message.user.first_name}} {% else %} Admin {%endif%}</p>
+                              <p>{% if message.user.first_name %} <span class="text-info">{{message.user.first_name}}:</span> {% else %} <span class="text-danger"> Admin</span> {%endif%}</p>
                             </div>
-                            <div class="chat-content col-11" style="max-width:100% !important">
+                            <div class="chat-content" style="max-width:100% !important">
                               <p>{{message.message}}</p>
-                              <span class="chat-time">{{message.created_at|timesince}} ago By:{% if message.user.first_name %} {{message.user.first_name}} {% else %} Admin {%endif%}</span>
+                              <span class="chat-time">{{message.created_at|timesince}} ago </span>
                             </div>
                           </div>
                           {% endif %}
@@ -120,9 +105,9 @@
               </div>
             </div>
             <div class="container-fluid w-50  bg-light shadow mt-5 messagesend">
-</div>
-          </div>
         </div>
+      </div>
+    </div>
         <!-- /Chats View -->
         
         <!-- Chat Right Sidebar -->
@@ -178,7 +163,7 @@
                             <h2>User Info</h2>
                           </div>
                           <small class="text-muted">Issued By</small>
-                          <h3 class="user-name m-t-10 mb-0">{{ramey.issued_by}}</h3>
+                          <h3 class="user-name m-t-10 mb-0">{{ramey.issued_by.first_name}}  {{ramey.issued_by.last_name}} </h3>
                           
                         </div>
                         <div class="chat-profile-info">
@@ -194,6 +179,10 @@
                             <li>
                               <span>Email:</span>
                               <span class="float-right text-muted">{{ramey.issued_by}}</span>
+                            </li>
+                            <li>
+                              <span>Project:</span>
+                              <span class="float-right text-muted">{{ramey.prj.project_name}}</span>
                             </li>
                             <li>
                               <span>Phone:</span>
@@ -261,7 +250,6 @@
     
         </div>
   <!-- /Page Wrapper -->
-  
- 
+
  
 {% endblock content %}

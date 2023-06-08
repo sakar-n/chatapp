@@ -6,10 +6,74 @@
 {% if user.is_authenticated %}       
 
 
-<div class="align-middle"><br>
-</div>
 
-<div class="container">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Welcome Admin!</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item active">Dashboard</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+				
+
+					<!-- /statistic -->
+					<div class="row">
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<span class="dash-widget-icon"><i class="fa fa-cubes"></i></span>
+									<div class="dash-widget-info">
+										<h3>{{project}}</h3>
+										<span><a href="{% url 'project'%}">Projects</a></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<span class="dash-widget-icon"><i class="fa fa-usd"></i></span>
+									<div class="dash-widget-info">
+										<h3>{{received_tickets}}</h3>
+										<span><a href="{% url 'received_tickets'%}">Total Tickets Received</a></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<span class="dash-widget-icon"><i class="fa fa-diamond"></i></span>
+									<div class="dash-widget-info">
+										<h3>{{issued_tickets}}</h3>
+										<span><a href="{% url 'issued_tickets'%}">Total Issued Tickets</a></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget">
+								<div class="card-body">
+									<span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+									<div class="dash-widget-info">
+										<h3>{{user_count}}</h3>
+										<span><a href="{% url 'index'%}">Employees</a></span>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+<div class="container-fluid">
 <h4>List Of Users </h4><br>
 
 <table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">

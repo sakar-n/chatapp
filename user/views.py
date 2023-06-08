@@ -5,7 +5,7 @@ from .forms import CreateUserForm, UserLoginForm, UserUpdateForm
 from .models import CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login,  logout, authenticate
-from company.models import Companies, CompanyUser
+from company.models import Companies, CompanyUser, Project, AssiciateCompany, ProjectUser
 from ticket.models import Tickets
 from django.contrib.auth.views import PasswordResetView,PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView
 
@@ -17,14 +17,26 @@ class Index(LoginRequiredMixin, View):
             company_name = Companies.objects.get(user_id=request.user.id).company_name
             company_id = Companies.objects.get(user_id=request.user.id)
             users = CompanyUser.objects.filter(company_id=company_id)
+            project = Project.objects.filter(company_id=company_id).count()
+            project_id = Project.objects.filter(company_id = company_id)
+            received_tickets = Tickets.objects.filter(prj_id__in=project_id).count()
+            associate_companies = AssiciateCompany.objects.filter(company_id=company_id)
+            projects = [associate_company.project for associate_company in associate_companies]
+            issued_tickets = Tickets.objects.filter(prj_id__in=projects).count()
             context = { "users": users,
                         "companyname": company_name,
+                        "user_count": users.count(),
+                        "project":project,
+                        "received_tickets": received_tickets,
+                        "issued_tickets": issued_tickets,
                         "active_link":"index",
                    }
             return render(request, self.template_name, context)
         except:
+            user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+            rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id).count()
             tickets = Tickets.objects.filter(issued_by_id=request.user.id)
-            return render(request, self.template_name1, {'tickets':tickets})
+            return render(request, self.template_name1, {'tickets':tickets, 'rec_tickets':rec_tickets, 'ticket_count':tickets.count(), "active_link":"index"})
 
     
 

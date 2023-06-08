@@ -1,4 +1,4 @@
-{% extends 'userbase.html'%}
+{% extends request.user.first_name|yesno:'userbase.html,base.html' %}
 {% block content %}
  <style>
     .center {

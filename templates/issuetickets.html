@@ -1,9 +1,15 @@
 {% extends 'userbase.html' %}
 {% block content %}
 
+<ul class="breadcrumb">
+    <li class="breadcrumb-item active"><a>Tickets</a></li> 
+    <li class="breadcrumb-item">Issue Ticket</li>
+  </ul>
+
+<div class="container-fluid w-50 mt-5">
 
 <div class="row">
-    <div class="col-xl-6 d-flex">
+    <div class="">
         <div class="card flex-fill">
             <div class="card-header">
                 <h4 class="card-title mb-0">Issue Ticket Form</h4>
@@ -60,5 +66,5 @@
             </div>
         </div>
     </div>
-
+</div>
 {% endblock content %}

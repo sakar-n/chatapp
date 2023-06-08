@@ -118,12 +118,12 @@
               <li class="menu-title"> 
                 <span></span>
               </li>
-              <li class="submenu">
-                <a href="#"><i class="la la-ticket"></i> <span> Tickets</span> <span class="menu-arrow"></span></a>
+              <li class="submenu{% if active_link == 'receivedTickets' or active_link == 'index' or active_link == 'isssueTickets' %} active {% endif %}">
+                <a href="#"><i class="la la-ticket"></i><span> Tickets</span> <span class="menu-arrow"></span></a>
                 <ul style="display: none;">
-                  <li><a href="{% url 'my_tickets'%}"> Received Tickets</a></li>
-                  <li><a href="{% url 'index'%}"> Your Tickets</a></li>
-                  <li><a href="{% url 'ticket'%}"> Issue Tickets</a></li>
+                  <li><a href="{% url 'my_tickets'%}" class="{% if active_link == 'receivedTickets' %} active {% endif %}"> Received Tickets</a></li>
+                  <li><a href="{% url 'index'%}" class="{% if active_link == 'index' %} active {% endif %}"> Your Tickets</a></li>
+                  <li><a href="{% url 'ticket'%}" class="{% if active_link == 'isssueTickets' %} active {% endif %}"> Issue Tickets</a></li>
                 </ul>
               </li>
             </ul>
@@ -133,8 +133,7 @@
       <!-- /Sidebar -->
       
       <!-- Page Wrapper -->
-            <div class="page-wrapper">
-
+      <div class="page-wrapper">
 
 
     {% endif %}
@@ -159,6 +158,7 @@
 
     {% endblock content%}
     </div>
+  </div>
 <!-- MDB -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
   
@@ -167,7 +167,9 @@
 <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.js"></script>
    <script type="text/javascript">
       let table = new DataTable('#myTable');
-      $('#message').fadeOut(5000)
+      var a = $('#message')
+      $(a).css("z-index","20")
+      $(a).fadeOut(5000)
       var y = document.getElementById("chatview")
       y.scrollTop = y.scrollHeight;
 

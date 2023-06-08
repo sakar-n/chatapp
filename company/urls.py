@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CompanyReg, CompanyUpadate, AddProject, ProjectDelete, ProjectUpdate, AddProjectUser, Associate_Company, ProejctAcceptance, RejectProject, Foreign_User, DeleteProjectUser, CancelProjectReq
+from .views import CompanyReg, CompanyUpadate, AddProject, ProjectDelete, ProjectUpdate, AddProjectUser, Associate_Company, ProejctAcceptance, RejectProject, Foreign_User, DeleteProjectUser, CancelProjectReq, DeleteForeignUser
 urlpatterns=[
     path('register/', CompanyReg.as_view(), name="register"),
     path('companyupdate/', CompanyUpadate.as_view(), name="companyupdate"),
@@ -13,4 +13,5 @@ urlpatterns=[
     path('project/decline/<int:id>', RejectProject.as_view(), name='decline_project'),
     path('project/cancel/<int:project_id>', CancelProjectReq.as_view(), name='cancel_project_request'),
     path('project/add/<int:id>/<int:company_id>/<int:project_id>', Foreign_User.as_view(), name='foreign_user'),
+    path('project/delete/<int:id>', DeleteForeignUser.as_view(), name='delete_foreign_user'),
 ]

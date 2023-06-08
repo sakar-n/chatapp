@@ -243,11 +243,13 @@ class Foreign_User(View):
     foreign_user =  ProjectAssignForm
     def get(self, request, id, company_id, project_id):
         form = self.foreign_user(company_id=company_id)
-        return render(request, self.tempalte_name, {'form':form})
+        foreign_users = ForeignUser.objects.filter(project_id=project_id)
+        return render(request, self.tempalte_name, {'form':form, 'foreign_users': foreign_users,'active_link': 'foreignuser'})
     
 
     def post(self, request, id, company_id, project_id):
         form = self.foreign_user(request.POST, company_id=company_id)
+        foreign_users = ForeignUser.objects.filter(project_id=project_id)
         if form.is_valid():
             email = form.cleaned_data['user_id'].user.id
             # user = ForeignUser.objects.get(user = email)
@@ -256,5 +258,11 @@ class Foreign_User(View):
             else:
                 ForeignUser.objects.create(associate_company_id=company_id, user_id=email, project_id=project_id)
                 messages.success(request, "Project Assigned Successfully")
-        return render(request, self.tempalte_name, {'form':form})
+        return render(request, self.tempalte_name, {'form':form, 'foreign_users': foreign_users, 'active_link': 'foreignuser'})
           
+class DeleteForeignUser(View):
+    def get(self, request, id):
+        foreign_users = ForeignUser.objects.filter(id=id)
+        foreign_users.delete()
+        messages.success(request,"User Deleted Successfully")
+        return redirect('foreign_user' )

@@ -112,11 +112,11 @@
             <!-- <li> 
               <a href="clients.html"><i class="la la-users"></i> <span>Clients</span></a>
             </li> -->
-            <li class="submenu{% if active_link == 'addProjects' or active_link == 'projectRequest' or active_link == 'assignCompany'%} active{% endif %}">
+            <li class="submenu{% if active_link == 'addProjects' or active_link == 'projectRequest' or active_link == 'assignCompany'  or active_link == 'foreignuser'%} active{% endif %}">
               <a href="#"><i class="la la-rocket"></i> <span> Projects</span> <span class="menu-arrow"></span></a>
               <ul style="display: none;">
                 <li><a href="{% url 'project'%}" class ="{% if active_link == 'addProjects' or active_link == 'assignCompany' %}active{% endif %}"> My Projects</a></li>
-                <li><a href="{% url 'project_accept'%}"class ="{% if active_link == 'projectRequest' %}active{% endif %}"> Project Request</a></li>
+                <li><a href="{% url 'project_accept'%}"class ="{% if active_link == 'projectRequest' or active_link == 'foreignuser' %}active{% endif %}"> Project Request</a></li>
               </ul>
             </li>
             <li class="submenu{% if active_link == 'receivedTickets' or active_link == 'IssuedTickets' or active_link == 'ticketPriorities' %} active {% endif %}">
@@ -152,6 +152,7 @@
             {% endfor %}
             {% endif %}
 
+
     {% block content %}
    
 
@@ -169,7 +170,11 @@
     <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.js"></script>
     <script type="text/javascript">
       let table = new DataTable('#myTable');
-      $('#message').fadeOut(3000)
+      var a = $('#message')
+      $(a).css("z-index","20")
+      $(a).fadeOut(5000)
+      var y = document.getElementById("chatview")
+      y.scrollTop = y.scrollHeight;
     </script>
 
 <!--Durga sir's Recommendation -->

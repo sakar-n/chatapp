@@ -1,15 +1,83 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{% for message in messages %}
-<div class="alert {{ message.tags }} alert-dismissible" role="alert">
- <div> {{ message }} </div>
-</div>
-{% endfor %}
+<ul class="breadcrumb">
+    <li class="breadcrumb-item active"><a>Projects</a></li>
+    <li class="breadcrumb-item active"><a class="breadcrumb-item active" href="{% url 'project_accept' %}">Project Request</a></li> 
+    <li class="breadcrumb-item">Assign User</li>
+</ul>
 
-<form method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button type="submit" class="btn btn-primary" >Assign User</button>
-</form>
+
+
+<div class="account-box ">
+  <div class="account-wrapper ">
+    <h3 class="account-title "> Assign New User </h3>
+
+    <form method="POST">
+      {% csrf_token %}
+      {{form}}
+      <button type="submit" class="btn btn-primary" >Assign User</button>
+    </form>
+    
+  </div>
+</div>
+
+
+<div class="col-md-12">
+
+  <h4>List of Projects </h4>
+  
+    <table id="myTable" class="table align-middle mb-0 bg-white table-striped" >
+      <thead class="bg-light">
+        <tr>
+          <th>Project Name</th>
+          <th>User</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      
+  {% for foreign_user in foreign_users%}
+  
+  <tr>
+    <td> {{foreign_user.project.project_name}}</td>
+    <td> {{foreign_user.user}}</td>
+    <td>
+  
+  
+   <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{foreign_user.id}}">
+      Delete
+    </button>
+  
+  
+  
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal{{foreign_user.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Priority Level</h5>
+            <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body"> Are You Sure want to delete {{foreign_user.user}} from this project ? </div>
+          <div class="modal-footer">
+            <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+            <a type="action" href="{% url 'delete_foreign_user'  foreign_user.id %}" class="btn btn-link btn-sm btn-rounded">
+              <!-- Button trigger modal -->
+              <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+                Delete
+              </button>
+            </a>
+        </div>
+      </div>
+    </div>
+  </td>
+  </tr>
+  
+  {% endfor %}
+  </table>
+  </div>
+
+
+
 {% endblock content %}

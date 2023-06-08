@@ -16,7 +16,7 @@ class Ticket(View):
         company_id = CompanyUser.objects.get(user_id=request.user.id).company_id
         priorities = Priorities.objects.filter(company_id=company_id)
         form1 = self.ticketform(company_id=company_id, request=request)  # Pass the company_id to the form
-        return render(request, self.template_name, {"form1": form1, 'form2': self.attachmentform, "priorities": priorities})
+        return render(request, self.template_name, {"form1": form1, 'form2': self.attachmentform, "priorities": priorities, "active_link" : "isssueTickets"})
     
     def post(self, request):
             company_id = CompanyUser.objects.get(user_id=request.user.id).company_id
@@ -38,7 +38,7 @@ class Ticket(View):
                 return redirect('ticket')
             else:
                 messages.error(request, form1.errors)
-                return render(request, self.template_name, {"form1": form1, "form2": form2})
+                return render(request, self.template_name, {"form1": form1, "form2": form2,  "active_link" : "isssueTickets"})
        
         
     
@@ -108,7 +108,7 @@ class DisplayingTickets(View):
     def get(self, request):
         user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
         displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
-        return render(request, self.template_name, {'displaying_tickets':displaying_tickets })
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, "active_link" : "receivedTickets"})
 
 class Message(View):
     template_name = 'message.html'

@@ -3,17 +3,69 @@
 
 {% if user.is_authenticated %}
 
+<ul class="breadcrumb">
+  <li class="breadcrumb-item active"><a>Tickets</a></li> 
+  <li class="breadcrumb-item">Your Tickets</li>
+</ul>
+<!-- /statistic -->
+<div class="container-fluid">
+<div class="row">
+  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-usd"></i></span>
+        <div class="dash-widget-info">
+          <h3>{{rec_tickets}}</h3>
+          <span><a href="{% url 'my_tickets'%}">Total Tickets Received</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-diamond"></i></span>
+        <div class="dash-widget-info">
+          <h3>{{ticket_count}}</h3>
+          <span><a href="{% url 'index'%}">Total Issued Tickets</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+ <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+        <div class="dash-widget-info">
+          <h3>{{ticket_count}}</h3>
+          <span>Open Tickets</span>
+        </div>
+      </div>
+    </div>
+  </div>
+ <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+        <div class="dash-widget-info">
+          <h3>{{ticket_count}}</h3>
+          <span>Pending Tickets</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
 
-<div class="align-middle"><br>
 
-  <h1 class="align-middle  mb-0">Welcome {{user.first_name}}</h1><br><br>
-  <a type="submit" class="btn btn-primary" href="{% url 'ticket' %}"> Issue Ticket </a>
-    
+<div class="container-fluid">
 
+          
 
 
-  <h4>Ticket issuesd by {{user.first_name}} </h4><br>
 
+
+  <h4>Ticket Issued By: {{user.first_name}} </h4>
+  <a type="submit" class="btn btn-primary mb-3" href="{% url 'ticket' %}"> Issue Ticket </a>
 <table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">
   <!-- <table  id="example" class="table align-middle mb-0 bg-white"> -->
     <thead class="bt-5">
@@ -79,7 +131,7 @@
 {% endfor %}
 </table>
 
-
+<div>
 
 {% else %}
 <a href="{% url 'login' %}"> You are not login please login </a>
