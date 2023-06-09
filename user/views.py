@@ -34,9 +34,11 @@ class Index(LoginRequiredMixin, View):
             return render(request, self.template_name, context)
         except:
             user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
-            rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id).count()
+            rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
+            opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
+            pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
             tickets = Tickets.objects.filter(issued_by_id=request.user.id)
-            return render(request, self.template_name1, {'tickets':tickets, 'rec_tickets':rec_tickets, 'ticket_count':tickets.count(), "active_link":"index"})
+            return render(request, self.template_name1, {'tickets':tickets, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"index"})
 
     
 

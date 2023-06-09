@@ -15,7 +15,7 @@
       <div class="card-body">
         <span class="dash-widget-icon"><i class="fa fa-usd"></i></span>
         <div class="dash-widget-info">
-          <h3>{{rec_tickets}}</h3>
+          <h3>{{rec_tickets|length}}</h3>
           <span><a href="{% url 'my_tickets'%}">Total Tickets Received</a></span>
         </div>
       </div>
@@ -37,8 +37,8 @@
       <div class="card-body">
         <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
         <div class="dash-widget-info">
-          <h3>{{ticket_count}}</h3>
-          <span>Open Tickets</span>
+          <h3> {{opened_tickets}} </h3>
+          <span><a href="{% url 'my_tickets'%}">Open Tickets</a></span>
         </div>
       </div>
     </div>
@@ -48,8 +48,8 @@
       <div class="card-body">
         <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
         <div class="dash-widget-info">
-          <h3>{{ticket_count}}</h3>
-          <span>Pending Tickets</span>
+          <h3> {{pending_tickets}}</h3>
+          <span><a href="{% url 'my_tickets'%}">Pending Tickets</a></span>
         </div>
       </div>
     </div>
@@ -79,6 +79,17 @@
         <th> Action </th>
       </tr>
     </thead>
+    <tfoot>
+      <tr>
+        <th>Status</th>
+        <th>Position</th>
+        <th>Office</th>
+        <th>Age</th>
+        <th>Start date</th>
+        <th>Salary</th>
+      </tr>
+    </tfoot>
+
     {% for ticket in tickets %}
     <tr>
         <td> <a href={% url 'view_ticket' ticket.ticket_id %}> {{ ticket.subject }}</a></td>

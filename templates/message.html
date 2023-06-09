@@ -42,7 +42,7 @@
 
                               <p>{% if message.user.first_name %} <span class="text-primary">{{message.user.first_name}}:</span> {% else %} <span class="text-danger">Admin:</span> {%endif%}</p>
                             </div>
-                            <div class="chat-content   border border-primary" style="max-width:100% !important;border-bottom-left-radius:0" >
+                            <div class="chat-content" style="max-width:100% !important;border-bottom-left-radius:0" >
                               <p>{{message.message}}</p>
                               {% for attachment in displaying_attachment %}
                               {% if attachment.message_id is message.message_id %}

@@ -194,17 +194,17 @@ class DeleteTicket(View):
 
 class OpenTicket(View):
     def get(self, request, ticket_id):
-        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
-        open_ticket = Tickets.objects.get(prj_id=user_project_id, ticket_id= ticket_id)
+        user_project_id = ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+        open_ticket = Tickets.objects.get(prj_id__in=user_project_id, ticket_id=ticket_id)
         open_ticket.status = True
         open_ticket.save()
         messages.success(request, 'Hurray, You have opened the project')
         return redirect('my_tickets')
-
+    
 class CloseTicket(View):
     def get(self, request, ticket_id):
-        user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
-        open_ticket = Tickets.objects.get(prj_id=user_project_id, ticket_id= ticket_id)
+        user_project_id = ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+        open_ticket = Tickets.objects.get(prj_id__in=user_project_id, ticket_id=ticket_id)
         open_ticket.closed_status = True
         open_ticket.save()
         messages.success(request, 'Ticket Closed Successfullly')
