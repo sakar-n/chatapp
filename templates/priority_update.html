@@ -1,0 +1,35 @@
+{% extends 'base.html'%}
+{% block content %}
+
+{% for message in messages %}
+<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+ <div> {{ message }} </div>
+</div>
+{% endfor %}
+
+<div class="main-wrapper">
+  <div class="account-content">
+   <div class="container">
+   
+      <div class="account-box ">
+        <div class="account-wrapper ">
+          <h3 class="account-title "> Update Priority Level</h3>
+</div>
+<form class = "p-3"method="POST">
+    {% csrf_token %}
+    <label class="form-label" for="form3Example4"></label>
+    {{ form }}
+    
+  
+    <div class="text-center text-lg-start mt-4 pt-2">
+      <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Update </button>
+    </div>
+  </form>
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+{% endblock content %}

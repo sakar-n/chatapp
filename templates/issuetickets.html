@@ -1,0 +1,70 @@
+{% extends 'userbase.html' %}
+{% block content %}
+
+<ul class="breadcrumb">
+    <li class="breadcrumb-item active"><a>Tickets</a></li> 
+    <li class="breadcrumb-item">Issue Ticket</li>
+  </ul>
+
+<div class="container-fluid w-50 mt-5">
+
+<div class="row">
+    <div class="">
+        <div class="card flex-fill">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Issue Ticket Form</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Subject</label>
+                        <div class="col-lg-9">
+                            {{ form1.subject }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Expiary Date</label>
+                        <div class="col-lg-9">
+                            {{ form1.due_date }}
+                        </div>
+                    </div>
+                    <!-- <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Email Address</label>
+                        <div class="col-lg-9">
+                            <input type="email" class="form-control">
+                        </div>
+                    </div> -->
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Priority Level</label>
+                        <div class="col-lg-9">
+                            {{ form1.priority_name  }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Project</label>
+                        <div class="col-lg-9">
+                            {{ form1.prj }}
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Message</label>
+                        <div class="col-lg-9">
+                            {{ form1.message }}
+                        </div>
+                    </div>
+            
+                    <div class="form-group row">
+                        <div class="col-lg-9">
+                            {{ form2 }}
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary">Issue Ticket</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

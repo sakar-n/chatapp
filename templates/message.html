@@ -1,0 +1,255 @@
+{% extends request.user.first_name|yesno:'userbase.html,base.html' %}
+
+
+{%block content%}
+    <!-- Chat Main Row -->
+    <div class="chat-main-row container-fluid">
+    
+      <!-- Chat Main Wrapper -->
+      <div class="chat-main-wrapper">
+      
+        <!-- Chats View -->
+        <div class="col-lg-9 message-view task-view ">
+          <div class="chat-window">
+            <div class="fixed-header" style="z-index:-1">
+              <div class="navbar">
+                <div class="user-details mr-auto">
+                  <div class="float-left user-img">
+                  
+                  </div>
+                  <div class="user-info float-left">
+                    <a href="profile.html" title="Mike Litorus"><span>{{ramey.subject}}</span> <i class="typing-text"></i></a>
+                    <span class="last-seen">Last seen today at 7:50 AM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="chat-contents">
+              <div class="chat-content-wrap">
+                <div class="chat-wrap-inner" id="chatview">
+                  <div class="chat-box">
+                    <div class="chats">
+                      <div class="chat chat-left">
+                        
+                        
+                        <div class="chat-body">
+                          {% for message in displaying_message %}
+                          
+                          {% if message.user_id is request.user.id %}
+                          
+                          <div class="chat-bubble d-row d-flex ">
+                            <div class="chat-avatar col-1 d-flex ">
+
+                              <p>{% if message.user.first_name %} <span class="text-primary">{{message.user.first_name}}:</span> {% else %} <span class="text-danger">Admin:</span> {%endif%}</p>
+                            </div>
+                            <div class="chat-content" style="max-width:100% !important;border-bottom-left-radius:0" >
+                              <p>{{message.message}}</p>
+                              {% for attachment in displaying_attachment %}
+                              {% if attachment.message_id is message.message_id %}
+                              <div class="files-cont">
+                                  
+                                <div class="file-type">
+                                  <span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+                                </div>
+                                <div class="files-info">
+                                  <span class="file-author"><a href="../../../media/{{attachment.file}}">Attachment</a></span><br><br>
+                                </div> 
+                              </div>                      
+                              {% endif %}
+                              {%endfor%}
+                              
+                              <span class="chat-time">{{message.created_at|timesince}} ago By:{% if message.user.first_name %} {{message.user.first_name}} {% else %} Admin {%endif%}</span>
+                            </div>
+                          </div>
+                          {% else %}
+                          <div class="chat-bubble d-row d-flex">
+                            <div class="chat-avatar col-1 d-flex ">
+    
+                              <p>{% if message.user.first_name %} <span class="text-info">{{message.user.first_name}}:</span> {% else %} <span class="text-danger"> Admin</span> {%endif%}</p>
+                            </div>
+                            <div class="chat-content" style="max-width:100% !important">
+                              <p>{{message.message}}</p>
+                              <span class="chat-time">{{message.created_at|timesince}} ago </span>
+                            </div>
+                          </div>
+                          {% endif %}
+
+                          {% endfor %}
+                          
+                        </div>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="chat-footer">
+              <div class="message-bar">
+                <div class="message-inner">
+                  <a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
+                  <form method="POST" enctype="multipart/form-data">
+                    {%csrf_token%}
+                  <div class="message-area">
+                    <div class="input-group" style="position:absolute;width:97%">
+                      {%csrf_token%}
+                      {{form1.message}}
+                      <span class="input-group-append">
+                        <button class="btn btn-custom" type="submit"><i class="fa fa-send"></i></button>
+                      </span>
+                    </div>
+                  </div><br><br>
+                  {{form2}}
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="container-fluid w-50  bg-light shadow mt-5 messagesend">
+        </div>
+      </div>
+    </div>
+        <!-- /Chats View -->
+        
+        <!-- Chat Right Sidebar -->
+        <div class="col-lg-3 message-view chat-profile-view chat-sidebar" id="task_window">
+          <div class="chat-window video-window">
+            <div class="tab-content chat-contents">
+              <div class="content-full tab-pane" id="calls_tab">
+                <div class="chat-wrap-inner">
+                  <div class="chat-box">
+                    <div class="chats">
+                      <div class="chat chat-left">
+                        <div class="chat-avatar">
+                          <a href="profile.html" class="avatar">
+                            <img alt="" src="assets/img/profiles/avatar-02.jpg">
+                          </a>
+                        </div>
+                        <div class="chat-body">
+                          <div class="chat-bubble">
+                            <div class="chat-content">
+                              <span class="task-chat-user">You</span> <span class="chat-time">8:35 am</span>
+                              <div class="call-details">
+                                <i class="material-icons">phone_missed</i>
+                                <div class="call-info">
+                                  <div class="call-user-details">
+                                    <span class="call-description">Jeffrey Warden missed the call</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="chat chat-left">
+                        <div class="chat-avatar">
+                          <a href="profile.html" class="avatar">
+                            <img alt="" src="assets/img/profiles/avatar-02.jpg">
+                          </a>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="content-full tab-pane show active" id="profile_tab">
+                <div class="display-table">
+                  <div class="table-row">
+                    <div class="table-body">
+                      <div class="table-content">
+                        <div class="chat-profile-img">
+                          <div class="edit-profile-img">
+                      
+                            <h2>User Info</h2>
+                          </div>
+                          <small class="text-muted">Issued By</small>
+                          <h3 class="user-name m-t-10 mb-0">{{ramey.issued_by.first_name}}  {{ramey.issued_by.last_name}} </h3>
+                          
+                        </div>
+                        <div class="chat-profile-info">
+                          <ul class="user-det-list">
+                            <li>
+                              <span>Organization:</span>
+                              <span class="float-right text-muted">{{ramey.priority.company.company_name}} </span>
+                            </li>
+                            <li>
+                              <span>Name:</span>
+                              <span class="float-right text-muted">{{ramey.issued_by.first_name}}  {{ramey.issued_by.last_name}}</span>
+                            </li>
+                            <li>
+                              <span>Email:</span>
+                              <span class="float-right text-muted">{{ramey.issued_by}}</span>
+                            </li>
+                            <li>
+                              <span>Project:</span>
+                              <span class="float-right text-muted">{{ramey.prj.project_name}}</span>
+                            </li>
+                            <li>
+                              <span>Phone:</span>
+                              <span class="float-right text-muted">{{ramey.issued_by.phone}}</span>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="transfer-files">
+                          <ul class="nav nav-tabs nav-tabs-solid nav-justified mb-0">
+                            <li class="nav-item"><a class="nav-link active" data-toggle="tab">All Files</a></li>
+                          </ul>
+                          <div class="tab-content">
+                            <div class="tab-pane show active" id="all_files">
+                              <ul class="files-list">
+                                {% for attachment in displaying_attachment %}
+                                <li>
+                                  
+                                  <div class="files-cont">
+                                  
+                                    <div class="file-type">
+                                      <span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+                                    </div>
+                                    <div class="files-info">
+                                      <span class="file-author"><a href="../../../media/{{attachment.file}}">Attachment</a></span> <span class="file-date">{{attachment.message.created_at|timesince}} ago</span>
+                                    </div>
+                                    {% endfor %}
+                                    
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Chat Right Sidebar -->
+        
+      </div>
+      <!-- /Chat Main Wrapper -->
+      
+    </div>
+    <!-- /Chat Main Row -->
+    
+    <!-- Drogfiles Modal -->
+ 
+    <!-- /Drogfiles Modal -->
+    
+    <!-- Add Group Modal -->
+  
+    <!-- /Add Group Modal -->
+    
+    <!-- Add Chat User Modal -->
+  
+    <!-- /Add Chat User Modal -->
+    
+    <!-- Share Files Modal -->
+   
+    <!-- /Share Files Modal -->
+    
+        </div>
+  <!-- /Page Wrapper -->
+
+ 
+{% endblock content %}

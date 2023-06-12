@@ -1,135 +1,151 @@
-{% extends "base.html" %}
+{% extends "userbase.html" %}
 {% block content %}
 
 {% if user.is_authenticated %}
-{% if messages %}
-    <ul class="messages">
-      {% for message in messages %}
-      <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-      {% endfor %}
-    </ul>
-      {% endif %} 
 
-    <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <!-- Container wrapper -->
-  <div class="container-fluid">
-    <!-- Toggle button -->
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-mdb-toggle="collapse"
-      data-mdb-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Collapsible wrapper -->
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <!-- Navbar brand -->
-      <a class="navbar-brand mt-2 mt-lg-0" href="#">
-        <img
-          src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
-          height="15"
-          alt="MDB Logo"
-          loading="lazy"
-        />
-      </a>
-      <!-- Left links -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Projects</a>
-        </li>
-      </ul>
-      <!-- Left links -->
-    </div>
-    <!-- Collapsible wrapper -->
-
-    <!-- Right elements -->
-    <div class="d-flex align-items-center">
-      <!-- Icon -->
-      <a class="text-reset me-3" href="#">
-        <i class="fas fa-shopping-cart"></i>
-      </a>
-
-      <!-- Notifications -->
-      <div class="dropdown">
-        <a
-          class="text-reset me-3 dropdown-toggle hidden-arrow"
-          href="#"
-          id="navbarDropdownMenuLink"
-          role="button"
-          data-mdb-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <i class="fas fa-bell"></i>
-          <span class="badge rounded-pill badge-notification bg-danger">1</span>
-        </a>
-        <ul
-          class="dropdown-menu dropdown-menu-end"
-          aria-labelledby="navbarDropdownMenuLink"
-        >
-          <li>
-            <a class="dropdown-item" href="#">Some news</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Another news</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </li>
-        </ul>
-      </div>
-      <!-- Avatar -->
-      <div class="dropdown">
-        <a
-          class="dropdown-toggle d-flex align-items-center hidden-arrow"
-          href="#"
-          id="navbarDropdownMenuAvatar"
-          role="button"
-          data-mdb-toggle="dropdown"
-          aria-expanded="false"
-        >
-          <img
-            src="https://mdbcdn.b-cdn.net/img/new/avatars/2.webp"
-            class="rounded-circle"
-            height="25"
-            alt="Black and White Portrait of a Man"
-            loading="lazy"
-          />
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
-          <li>
-            <a class="dropdown-item" href="{% url 'update_user' user.id %}">Update Profile</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#" >Settings</a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="{% url 'logout'%}">Logout</a>
-          </li>
-        </ul>
+<ul class="breadcrumb">
+  <li class="breadcrumb-item active"><a>Tickets</a></li> 
+  <li class="breadcrumb-item">Your Tickets</li>
+</ul>
+<!-- /statistic -->
+<div class="container-fluid">
+<div class="row">
+  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-usd"></i></span>
+        <div class="dash-widget-info">
+          <h3>{{rec_tickets|length}}</h3>
+          <span><a href="{% url 'my_tickets'%}">Total Tickets Received</a></span>
+        </div>
       </div>
     </div>
-    <!-- Right elements -->
   </div>
-  <!-- Container wrapper -->
-</nav>
-<!-- Navbar -->
+  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-diamond"></i></span>
+        <div class="dash-widget-info">
+          <h3>{{ticket_count}}</h3>
+          <span><a href="{% url 'index'%}">Total Issued Tickets</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+ <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+        <div class="dash-widget-info">
+          <h3> {{opened_tickets}} </h3>
+          <span><a href="{% url 'my_tickets'%}">Open Tickets</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+ <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+        <div class="dash-widget-info">
+          <h3> {{pending_tickets}}</h3>
+          <span><a href="{% url 'my_tickets'%}">Pending Tickets</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
 
-  <h1 class="align-middle  mb-0">Welcome {{user.first_name}}</h1><br><br>
 
+<div class="container-fluid">
+
+          
+
+
+
+
+  <h4>Ticket Issued By: {{user.first_name}} </h4>
+  <a type="submit" class="btn btn-primary mb-3" href="{% url 'ticket' %}"> Issue Ticket </a>
+<table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">
+  <!-- <table  id="example" class="table align-middle mb-0 bg-white"> -->
+    <thead class="bt-5">
+      <tr>
+        <th>Subject</th>
+        <th>Priority Level</th>
+        <th>Project</th>
+        <th>Issue Date</th>
+        <th>Status</th>
+        <th>Message</th>
+        <th> Action </th>
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <th>Status</th>
+        <th>Position</th>
+        <th>Office</th>
+        <th>Age</th>
+        <th>Start date</th>
+        <th>Salary</th>
+      </tr>
+    </tfoot>
+
+    {% for ticket in tickets %}
+    <tr>
+        <td> <a href={% url 'view_ticket' ticket.ticket_id %}> {{ ticket.subject }}</a></td>
+        <td> {{ ticket.priority }}</td>
+        <td> {{ ticket.prj }}</td>
+        <td> {{ ticket.created_at }}</td>
+        {% if ticket.closed_status  and  ticket.status %}
+        <td> <span class="badge badge-dark rounded-pill d-inline"> Closed </span> </td>
+        {% elif ticket.status  and  not ticket.closed_status %}
+          <td> <span class="badge badge-success rounded-pill d-inline"> Opened </span> </td>
+        {% else  %}
+          <td> <span class="badge badge-danger rounded-pill d-inline"> Pending </span> </td>
+        {% endif %} </td>
+        <td>  <a type="button" href="{% url 'message' ticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
+          Message
+        </a>
+       </td>
+        <td>
+        <a type="action"  href="#"  class="btn btn-link btn-sm btn-rounded">
+          <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-mdb-toggle="modal"  data-mdb-target="#exampleModal{{ticket.ticket_id}}">
+  Delete
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal{{ticket.ticket_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel{{ticket.ticket_id}}">Delete Priority Level</h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body"> Are You Sure want to delete {{ ticket.subject }}? </div>
+      <div class="modal-footer">
+        <button type="button"  class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+        <a type="action" href="{% url 'delete_ticket' ticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
+          <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#exampleModal">
+            Delete
+          </button>
+        </a>
+    </div>
+  </div>
+</div>
+        </a>
+
+        </td>
+    </tr>
+
+{% endfor %}
+</table>
+
+<div>
 
 {% else %}
 <a href="{% url 'login' %}"> You are not login please login </a>
 {% endif %}
-
-</table>
 
 {%endblock content%}

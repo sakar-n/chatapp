@@ -1,0 +1,61 @@
+{% extends 'userbase.html' %}
+{% block content %}
+<div id="display"></div>
+<div id="displaya"></div>
+<p>yellow</p>
+{{ ticket_id }}
+<p id='app'> {{ text }}<p>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  
+</script>
+<script>
+
+    var socket = new WebSocket( url='ws://localhost:8080/hello/');
+    
+    socket.onopen = function(event){
+        console.log("Web socket Connection established successfully");
+    };
+    socket.onmessage = function(event){
+        var data = JSON.parse(event.data);
+        console.log(data);
+        document.querySelector('#app').innerText = data.message;
+    };
+    function getMessages() {
+        var userId = "{{ request.user.id }}";
+        $.ajax({
+          type: 'GET',
+          url: "{% url 'getmessage' ticket_id %}",
+          success: function (response) {
+            console.log(response.messages.message);
+            $("#display").empty();
+            $("#displaya").empty();
+            for (let key in response.messages) {
+              if (response.messages[key].user_id == userId) {
+                var temp =
+                  "<p class='small p-2 ms-3 mb-1 text-white rounded-3 bg-danger'>" +
+                  response.messages[key].message +
+                  "</p>";
+                $("#display").append(temp);
+              } else {
+                var temp1 =
+                  "<p class='small p-2 me-3 mb-1 text-white rounded-3 bg-success'>" +
+                  response.messages[key].message +
+                  "</p>";
+                $("#display").append(temp1);
+              }
+            };
+    
+        //setTimeout(getMessages, 5000); // Delay of 5 seconds
+          },
+          error: function (response) {
+            alert('An error occurred');
+          },
+        });
+      }
+    
+      $(document).ready(function () {
+        getMessages(); // Initial call to start getting messages
+      });
+</script> 
+{% endblock content %}

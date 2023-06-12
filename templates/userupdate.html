@@ -1,8 +1,15 @@
-{% extends 'base.html'%}
+{% extends request.user.first_name|yesno:'userbase.html,base.html' %}
 {% block content %}
 
-
-<form method="POST">
+<div class="main-wrapper">
+  <div class="account-content">
+   <div class="container">
+   
+      <div class="account-box ">
+        <div class="account-wrapper ">
+          <h3 class="account-title "> Update User</h3>
+</div>
+<form class = "p-3"method="POST">
     {% csrf_token %}
     <label class="form-label" for="form3Example4">First Name</label>
     {{ form.first_name }}
@@ -33,8 +40,14 @@
     {% endif %}
   
     <div class="text-center text-lg-start mt-4 pt-2">
-      <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Register </button>
+      <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Update </button>
     </div>
   </form>
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
 
 {% endblock content %}
