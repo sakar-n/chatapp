@@ -6,7 +6,7 @@ from .models import CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login,  logout, authenticate
 from company.models import Companies, CompanyUser, Project, AssiciateCompany, ProjectUser
-from ticket.models import Tickets
+from ticket.models import Tickets, Attachments
 from django.contrib.auth.views import PasswordResetView,PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView
 
 class Index(LoginRequiredMixin, View):
@@ -38,11 +38,12 @@ class Index(LoginRequiredMixin, View):
             opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
             pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
             tickets = Tickets.objects.filter(issued_by_id=request.user.id)
-            return render(request, self.template_name1, {'tickets':tickets, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"index"})
+            attachments = Attachments.objects.filter(ticket_id__in=tickets)
+            return render(request, self.template_name1, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"index"})
 
     
 
-    
+     
 class Register(LoginRequiredMixin, View):
     userform = CreateUserForm
     template_name = 'user_register.html'
