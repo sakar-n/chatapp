@@ -166,7 +166,10 @@
 <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.3.0/mdb.min.js"></script>
    <script type="text/javascript">
-      let table = new DataTable('#myTable')
+    $('#myTable').DataTable({
+      "order":[],
+
+      })
       var a = $('#message')
       $(a).css("z-index","20")
       $(a).fadeOut(5000)

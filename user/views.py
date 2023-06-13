@@ -37,7 +37,7 @@ class Index(LoginRequiredMixin, View):
             rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
             opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
             pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
-            tickets = Tickets.objects.filter(issued_by_id=request.user.id)
+            tickets = Tickets.objects.filter(issued_by_id=request.user.id).order_by('-created_at')
             attachments = Attachments.objects.filter(ticket_id__in=tickets)
             return render(request, self.template_name1, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"index"})
 
