@@ -24,7 +24,7 @@ class Tickets(models.Model):
     due_date = models.DateTimeField(null=False)
     closed_date = models.DateTimeField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
- 
+
 
 class MessageModel(models.Model):
     message_id = models.AutoField(primary_key=True)

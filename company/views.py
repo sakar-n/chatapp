@@ -5,10 +5,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Companies, Project, ProjectUser, AssiciateCompany, ForeignUser, CompanyUser
 from django.contrib import messages
 from user.models import CustomUser
+from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 
-class CompanyReg(View):
+class CompanyReg(LoginRequiredMixin, View):
     company_form = CompanyForm
     reg_form = CreateCompanyForm
     template_name = "register.html"

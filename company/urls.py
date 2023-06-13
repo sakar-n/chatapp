@@ -1,7 +1,8 @@
 from django.urls import path
+from django.contrib.auth.decorators import login_required 
 from .views import CompanyReg, CompanyUpadate, AddProject, ProjectDelete, ProjectUpdate, AddProjectUser, Associate_Company, ProejctAcceptance, RejectProject, Foreign_User, DeleteProjectUser, CancelProjectReq, DeleteForeignUser
 urlpatterns=[
-    path('register/', CompanyReg.as_view(), name="register"),
+    path('register/', login_required(CompanyReg.as_view()), name="register"),
     path('companyupdate/', CompanyUpadate.as_view(), name="companyupdate"),
     path('project/', AddProject.as_view(), name='project'),
     path('projectdelete/<int:project_id>', ProjectDelete.as_view(), name='delete_project'),

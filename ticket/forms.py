@@ -6,7 +6,7 @@ from company.models import CompanyUser, ForeignUser, Project
 class TicketForm(forms.ModelForm):
     subject = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder':'subject', 'class':'form-control'}))
     message = forms.CharField(max_length=384000, required=True, widget=forms.Textarea(attrs={'placeholder':'Enter Message', 'class':'form-control'}))
-    prj = forms.ModelChoiceField(queryset=None)
+    prj = forms.ModelChoiceField(queryset=None, widget=forms.Select(attrs={'class':'select2'}))
     due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), initial=datetime.now() + timedelta(hours=48))
     priority_name = forms.ModelChoiceField(queryset=None)
 

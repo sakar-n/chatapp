@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from .forms import TicketForm, AttachmentForm, AddPrioritiesForm, MessageForm, MessageAttachmentForm
 from company.models import Companies, CompanyUser, ForeignUser, ProjectUser, Project, AssiciateCompany
-from .models import Priorities, Project, Tickets, MessageModel, MessageAttachments
+from .models import Priorities, Project, Tickets, MessageModel, MessageAttachments, Attachments
 from django.core.serializers import serialize
 from django.http import JsonResponse
 # Create your views here.
@@ -107,8 +107,9 @@ class DisplayingTickets(View):
     template_name = 'my_tickets.html'
     def get(self, request):
         user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
-        displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
-        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, "active_link" : "receivedTickets"})
+        displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id).order_by('-created_at')
+        attachments = Attachments.objects.filter(ticket_id__in=displaying_tickets)
+        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'attachments':attachments, "active_link" : "receivedTickets"})
 
 class Message(View):
     template_name = 'message.html'
@@ -213,9 +214,9 @@ class CloseTicket(View):
 class TicketDetail(View):
     template_name = 'ticket_read.html'
     def get(self, request, ticket_id):
-            user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
-            open_ticket = Tickets.objects.filter(prj_id__in=user_project_id, ticket_id=ticket_id)
-            return render(request, self.template_name, {'open_ticket': open_ticket})
+            open_ticket = Tickets.objects.filter(ticket_id=ticket_id)
+            attachments = Attachments.objects.filter(ticket_id=ticket_id)
+            return render(request, self.template_name, {'open_ticket': open_ticket, 'attachments':attachments})
 
             
         
@@ -238,7 +239,7 @@ class DisplayingReceivedTickets(View):
     def get(self, request):
         company_id =  Companies.objects.get(user_id = request.user.id).company_id
         project_id = Project.objects.filter(company_id = company_id)
-        displaying_tickets = Tickets.objects.filter(prj_id__in=project_id)
+        displaying_tickets = Tickets.objects.filter(prj_id__in=project_id).order_by('-created_at')
         return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'active_link':"receivedTickets"})
 
 class DisplayingIssuedTickets(View):
@@ -247,6 +248,28 @@ class DisplayingIssuedTickets(View):
         company_id = Companies.objects.get(user_id=request.user.id).company_id
         associate_companies = AssiciateCompany.objects.filter(company_id=company_id)
         projects = [associate_company.project for associate_company in associate_companies]
-        displaying_tickets = Tickets.objects.filter(prj_id__in=projects)
+        displaying_tickets = Tickets.objects.filter(prj_id__in=projects).order_by('status').order_by('closed_status').order_by('-created_at')
         return render(request, self.template_name, {'displaying_tickets': displaying_tickets, 'active_link':"IssuedTickets"})
-        
+
+class OpenTicketByAdmin(View):
+    def get(self, request,  ticket_id):
+        open_ticket = Tickets.objects.get(ticket_id=ticket_id)
+        open_ticket.status = True
+        open_ticket.save()
+        messages.success(request, 'Hurray, You have opened the project')
+        return redirect('received_tickets')
+
+class CloseTicketByAdmin(View):
+    def get(self, request,  ticket_id):
+        open_ticket = Tickets.objects.get(ticket_id=ticket_id)
+        open_ticket.closed_status = True
+        open_ticket.save()
+        messages.success(request, 'Ticket Closed Successfullly')
+        return redirect('received_tickets')
+
+class DeleteTicketByAdmin(View):
+     def get(self, request,  ticket_id):
+        delete_ticket = Tickets.objects.get(ticket_id=ticket_id)
+        delete_ticket.delete()
+        messages.success(request, "Ticket Deleted Successfully")
+        return redirect('issued_tickets')

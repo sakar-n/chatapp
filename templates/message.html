@@ -18,8 +18,8 @@
                   
                   </div>
                   <div class="user-info float-left">
-                    <a href="profile.html" title="Mike Litorus"><span>{{ramey.subject}}</span> <i class="typing-text"></i></a>
-                    <span class="last-seen">Last seen today at 7:50 AM</span>
+                    <a href="profile.html" title="Mike Litorus"><span> {{ramey.subject}}</span> <i class="typing-text"></i></a>
+                    <span class="last-seen">{{ramey.issued_by.first_name}} {{ramey.issued_by.last_name}}</span>
                   </div>
                 </div>
               </div>
@@ -69,6 +69,19 @@
                             </div>
                             <div class="chat-content" style="max-width:100% !important">
                               <p>{{message.message}}</p>
+                              {% for attachment in displaying_attachment %}
+                              {% if attachment.message_id is message.message_id %}
+                              <div class="files-cont">
+                                  
+                                <div class="file-type">
+                                  <span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+                                </div>
+                                <div class="files-info">
+                                  <span class="file-author"><a href="../../../media/{{attachment.file}}">Attachment</a></span><br><br>
+                                </div> 
+                              </div>                      
+                              {% endif %}
+                              {%endfor%}
                               <span class="chat-time">{{message.created_at|timesince}} ago </span>
                             </div>
                           </div>

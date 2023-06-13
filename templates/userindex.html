@@ -81,18 +81,34 @@
     </thead>
     <tfoot>
       <tr>
-        <th>Status</th>
+        <th>Name</th>
         <th>Position</th>
         <th>Office</th>
         <th>Age</th>
         <th>Start date</th>
         <th>Salary</th>
+        <th>Action</th>
       </tr>
     </tfoot>
-
+ 
     {% for ticket in tickets %}
     <tr>
-        <td> <a href={% url 'view_ticket' ticket.ticket_id %}> {{ ticket.subject }}</a></td>
+      <td>
+        <a href={% url 'view_ticket' ticket.ticket_id %}> <h4>{{ ticket.subject }}</h4> </a> <p>{{ ticket.message }}</p>
+        {%for attached in attachments %}
+        {%if attached.ticket_id == ticket.ticket_id %}
+        <div class="files-cont">
+                                  
+            <div class="file-type">
+              <span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+            </div>
+            <div class="files-info">
+              <span class="file-author"><a href="../../../media/{{attached.file}}">Attachment</a></span><br><br>
+            </div> 
+        </div>
+        {% endif %}
+        {% endfor %}
+      </td>
         <td> {{ ticket.priority }}</td>
         <td> {{ ticket.prj }}</td>
         <td> {{ ticket.created_at }}</td>
@@ -138,8 +154,9 @@
 
         </td>
     </tr>
-
 {% endfor %}
+
+
 </table>
 
 <div>
@@ -148,4 +165,8 @@
 <a href="{% url 'login' %}"> You are not login please login </a>
 {% endif %}
 
+
+
 {%endblock content%}
+
+

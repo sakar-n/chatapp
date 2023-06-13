@@ -59,9 +59,6 @@
             <div class="account-footer">
               <p>Forget Password ? <a href="{% url 'reset_password' %}">Reset</a></p>
             </div>
-            <div class="account-footer">
-              <p>Don't have an account yet? <a href="{% url 'register' %}">Register</a></p>
-            </div>
 
             {% if form.errors %}
               {% for field in form %}
