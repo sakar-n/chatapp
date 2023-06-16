@@ -8,7 +8,7 @@ from django.contrib.auth import login,  logout, authenticate
 from company.models import Companies, CompanyUser, Project, AssiciateCompany, ProjectUser
 from ticket.models import Tickets, Attachments
 from django.contrib.auth.views import PasswordResetView,PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView
-
+from project.models import PasariteUser
 class Index(LoginRequiredMixin, View):
     template_name="index.html"
     template_name1="userindex.html"
