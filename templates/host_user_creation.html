@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  
+  <div class="main-wrapper">
+    <div class="account-content">
+     <div class="container">
+      
+        
+        <div class="account-box">
+          <div class="account-wrapper">
+            <h3 class="account-title">Add Host User</h3>
+          <form method="POST">
+           
+
+            {% csrf_token %}
+            
+            <label class="form-label" for="form3Example4">First Name</label>
+            {{ form1.first_name }}
+
+            
+            <label class="form-label" for="form3Example4">Last Name</label>
+            {{ form1.last_name }}
+
+            <label class="form-label" for="form3Example4">Email</label>
+            {{ form1.email }}
+            
+            <label class="form-label" for="form3Example4">Phone</label>
+            {{ form1.phone }}
+
+            {% for error in field.errors %}
+            {{ error|escape }}
+            {% endfor %}
+
+            <label class="form-label" for="form3Example4">Password</label>
+            {{ form1.password1 }}
+
+            <label class="form-label" for="form3Example4">Confirm Password</label>
+            {{ form1.password2 }}
+
+            <!-- <label class="form-label" for="form3Example4">Company</label>
+            {{ form2.company_name }} -->
+
+            {% if form1.errors %}
+            {% for field in form1 %}
+            {% for error in field.errors %}
+            {{ error|escape }}
+            {% endfor %}
+            {% endfor %}
+            {% for error in form1.non_field_errors %}
+            {{ error|escape }}
+            {% endfor %}
+            {% endif %}
+    
+  
+           
+  
+            <div class="text-center text-lg-start mt-4 pt-2">
+              <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;"> Register </button>
+            </div>
+  
+          </form>
+       
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+<!-- /Main Wrapper -->      
+
+{% endblock content %}

@@ -104,9 +104,10 @@
               <span>Employees</span>
             </li>
             <li class="submenu {% if active_link == 'addEmployee' %} active{% endif %}">
-              <a href="#"><i class="la la-user"></i> <span> Employees</span> <span class="menu-arrow"></span></a>
+              <a href="#"><i class="la la-user"></i> <span> Users </span> <span class="menu-arrow"></span></a>
               <ul style="display: none;">
-                <li><a href="{% url 'user_register'%}" class ="{% if active_link == 'addEmployee' %}active{% endif %}"> Add Employees</a></li>
+                <li><a href="{% url 'user_register'%}" class ="{% if active_link == 'addEmployee' %}active{% endif %}"> Add Company User</a></li>
+                <li><a href="{% url 'displaying_host_user'%}" class ="{% if active_link == 'addEmployee' %}active{% endif %}"> Host User</a></li>
               </ul>
             </li>
             <!-- <li> 

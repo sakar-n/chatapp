@@ -243,6 +243,9 @@ class Foreign_User(View):
     tempalte_name = "foreign_user.html"
     foreign_user =  ProjectAssignForm
     def get(self, request, id, company_id, project_id):
+       # The above code is calling a method named `foreign_user` on the `self` object, passing in a
+       # parameter `company_id`. The purpose and implementation of the `foreign_user` method is not
+       # shown in the given code snippet.
         form = self.foreign_user(company_id=company_id)
         foreign_users = ForeignUser.objects.filter(project_id=project_id)
         return render(request, self.tempalte_name, {'form':form, 'foreign_users': foreign_users,'active_link': 'foreignuser'})
