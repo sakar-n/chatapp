@@ -36,7 +36,7 @@ class DisplayHostUser(View):
         company_id = Companies.objects.get(user_id=request.user.id)
         users = PasariteUser.objects.filter(company_id=company_id)
         return render(request, self.template_name, {'users':users})
-    
+
 class Parasite_User(View):
     template_name = 'parasite_user.html'
     parasite_user = ParasiteForm
