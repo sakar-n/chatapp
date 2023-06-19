@@ -82,8 +82,12 @@ class Login(View):
                 email = request.POST['email']
                 password = request.POST['password']
                 user = authenticate(request, email=email, password=password)
+                remember_me = request.POST.get("remember_me")
                 if user is not None:
                     login(request, user)
+                    if remember_me == 'on' :
+                        request.session.set_expiry(1209600)
+                        print(request.POST)
                     return redirect('index') 
                 else:
                     if not CustomUser.objects.filter(email=email).exists():
@@ -106,16 +110,29 @@ class UserUpdate(LoginRequiredMixin, View):
 
     def get(self, request, user_id):
         company_id = Companies.objects.get(user_id=request.user.id).company_id
-        user1 = get_object_or_404(CustomUser, id=user_id)
-        user_data = {
-            'first_name': user1.first_name,
-            'last_name': user1.last_name,
-            'email': user1.email,
-            'phone': user1.phone,
-        }
-        form = self.updateform(initial=user_data)
-        if get_object_or_404(CompanyUser, user_id = user1, company_id = company_id):
-            return render(request, self.template_name, {"form": form, "user": user1})
+        try:
+            user1 = get_object_or_404(CustomUser, id=user_id)
+            user_data = {
+                'first_name': user1.first_name,
+                'last_name': user1.last_name,
+                'email': user1.email,
+                'phone': user1.phone,
+            }
+            form = self.updateform(initial=user_data)
+            if get_object_or_404(CompanyUser, user_id = user1, company_id = company_id):
+                return render(request, self.template_name, {"form": form, "user": user1})
+        
+        except:
+            user2 = get_object_or_404(PasariteUser, user_id=user_id)
+            user_data = {
+                'first_name': user1.first_name,
+                'last_name': user1.last_name,
+                'email': user1.email,
+                'phone': user1.phone,
+            }
+            form = self.updateform(initial=user_data)
+            if get_object_or_404(PasariteUser, user_id = user1, company_id = company_id):
+                return render(request, self.template_name, {"form": form, "user": user2})
         
       
     def post(self, request, user_id):

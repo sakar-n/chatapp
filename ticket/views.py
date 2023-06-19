@@ -89,8 +89,8 @@ class AddPriority(View):
                 unsaveform.save()
                 messages.success(request, "Ticket Priorities Added Successfully")
                 return redirect('ticket_management')
-        else:
             messages.error(request, "Tickets Can't be added")
+        else:
             return render(request, self.template_name, {'form':form})
         
 class DeletePriority(View):
