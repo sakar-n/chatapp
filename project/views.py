@@ -8,6 +8,9 @@ from company.models import Companies
 from .models import PasariteUser, ProjectParasite
 from django.contrib import messages
 from user.models import CustomUser
+
+
+
 class HostUserRegister(LoginRequiredMixin, View):
     userform = CreateUserForm
     template_name = 'host_user_creation.html'
@@ -54,6 +57,9 @@ class Parasite_User(View):
             if ProjectParasite.objects.filter(project_id=project_id, user_id=user.id).exists():
                 messages.error(request, "This user is Already Assigned to this Project")
                 return render(request, self.template_name, {'form':form, 'parasite_user':parasite_user})
+            elif ProjectParasite.objects.filter(project_id=project_id).exists():
+                messages.error(request, "This project can no longer accept hostuser. Slot not avilable.")
+                return render(request, self.template_name, {'form':form, 'parasite_user':parasite_user})               
             else:
                 ProjectParasite.objects.create(project_id=project_id, user_id=user.id)
                 messages.success(request, "Project Assigned Successfully")

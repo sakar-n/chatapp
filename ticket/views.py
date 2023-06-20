@@ -9,6 +9,10 @@ from django.core.serializers import serialize
 from django.http import JsonResponse
 from project.models import PasariteUser
 # Create your views here.
+
+
+
+
 class Ticket(View):
     template_name = 'issuetickets.html'
     ticketform = TicketForm
@@ -52,7 +56,9 @@ class Ticket(View):
                 ticket = form1.save(commit=False)
                 ticket.issued_by_id = request.user.id
                 ticket.priority_id = request.POST['priority_name']
-                ticket.prj_id = request.POST['prj']
+                project_name = form1.cleaned_data['prj']
+                project = Project.objects.filter(project_name=project_name).first() # Retrieve the project based on the name
+                ticket.prj_id = project.project_id
                 ticket.save()
                 if form1.is_valid() and 'file' in request.FILES: 
                     attachment = form2.save(commit=False)
@@ -137,6 +143,9 @@ class DisplayingTickets(View):
         return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'attachments':attachments, "active_link" : "receivedTickets"})
 
 class Message(View):
+    base_template = 'base.html'
+    userbase_template = 'userbase.html'
+    host_user_base = 'host_user_base.html'
     template_name = 'message.html'
     message_form = MessageForm
     attachment = MessageAttachmentForm
@@ -147,8 +156,12 @@ class Message(View):
         displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
         user_id = request.user.id
-        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment,'ramey':ramey, 'form1':self.message_form, 'form2':self.attachment, "ticket_id":ticket_id, "user_id": user_id})
-    
+        if PasariteUser.objects.filter(user_id=user_id).exists():
+            return render(request, self.template_name, {'extend_template': self.host_user_base, 'displaying_tickets': displaying_tickets, 'displaying_message': displaying_message, 'displaying_attachment': displaying_attachment, 'ramey': ramey, 'form1': self.message_form, 'form2': self.attachment, "ticket_id": ticket_id, "user_id": user_id})
+        elif request.user.first_name:
+            return render(request, self.template_name, {'extend_template': self.userbase_template, 'displaying_tickets': displaying_tickets, 'displaying_message': displaying_message, 'displaying_attachment': displaying_attachment, 'ramey': ramey, 'form1': self.message_form, 'form2': self.attachment, "ticket_id": ticket_id, "user_id": user_id})
+        else:
+            return render(request, self.template_name, {'extend_template': self.base_template, 'displaying_tickets': displaying_tickets, 'displaying_message': displaying_message, 'displaying_attachment': displaying_attachment, 'ramey': ramey, 'form1': self.message_form, 'form2': self.attachment, "ticket_id": ticket_id, "user_id": user_id})
     def post(self, request, ticket_id):
         user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
         displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id, ticket_id=ticket_id)
@@ -172,7 +185,8 @@ class Message(View):
             return redirect('message', ticket_id)
         else:
             messages.error('Invalid Message')
-        return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment, 'form1':self.message_form, 'form2':self.attachment })
+            return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'displaying_attachment':displaying_attachment, 'form1':self.message_form, 'form2':self.attachment })
+        
 
 
 class GetMessage(View):
@@ -298,3 +312,4 @@ class DeleteTicketByAdmin(View):
         delete_ticket.delete()
         messages.success(request, "Ticket Deleted Successfully")
         return redirect('issued_tickets')
+    

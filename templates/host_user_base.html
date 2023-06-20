@@ -85,12 +85,13 @@
          
           <li class="nav-item dropdown has-arrow main-drop">
             <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-              <span class="user-img"><img src="../static/assets/img/profiles/avatar-21.jpg" alt="">
+              <span class="user-img"><img src="assets/img/profiles/avatar-21.jpg" alt="">
               <span class="status online"></span></span>
               <span>{{user.first_name}}</span>
             </a>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="{% url 'logout'%}">Logout</a>
+              <a class="dropdown-item" href="{% url 'self_update' user.id %}">Update Profile</a>
             </div>
           </li>
         </ul>
@@ -117,11 +118,13 @@
               <li class="menu-title"> 
                 <span></span>
               </li>
-              <li class="submenu{% if active_link == 'receivedTickets' or active_link == 'index' or active_link == 'isssueTickets' %} active {% endif %}">
+              <li class="submenu{% if active_link == 'solvedtickets' or active_link == 'index' or active_link == 'isssueTickets' or active_link == 'dashboard' %} active {% endif %}">
                 <a href="#"><i class="la la-ticket"></i><span> Tickets</span> <span class="menu-arrow"></span></a>
                 <ul style="display: none;">
-                  <li><a href="{% url 'my_tickets'%}" class="{% if active_link == 'receivedTickets' %} active {% endif %}"> Received Tickets</a></li>
-                  <li><a href="{% url 'index'%}" class="{% if active_link == 'index' %} active {% endif %}"> Your Tickets</a></li>
+                  <li><a href="{% url 'index'%}" class="{% if active_link == 'dashboard' %} active {% endif %}"> DashBoard </a></li>
+                  <li><a href="{% url 'ticket'%}" class="{% if active_link == 'isssueTickets' %} active {% endif %}"> Issue Tickets</a></li>
+                  <li><a href="{% url 'host_unsolved'%}" class="{% if active_link == 'index' %} active {% endif %}"> Unsolved Tickets</a></li>
+                  <li><a href="{% url 'solved_tickets'%}" class="{% if active_link == 'solvedtickets' %} active {% endif %}"> Solved Tickets </a></li>
                 </ul>
               </li>
             </ul>
@@ -188,8 +191,8 @@
 
 <!-- Chart JS -->
 <script src="{% static 'assets/plugins/morris/morris.min.js' %}"></script>
-<script src="{% static '../static/assets/plugins/raphael/raphael.min.js' %}"></script>
-<script src="{% static '../static/assets/js/chart.js' %}"></script>
+<script src="{% static 'assets/plugins/raphael/raphael.min.js' %}"></script>
+<script src="{% static 'assets/js/chart.js' %}"></script>
 
 <!-- Custom JS -->
 <script src="{% static 'assets/js/app.js' %}"></script>
