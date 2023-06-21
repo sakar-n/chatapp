@@ -1,4 +1,4 @@
-{% extends 'userbase.html' %}
+{% extends 'host_user_base.html' %}
 {% block content %}
 
 <ul class="breadcrumb">
@@ -17,6 +17,12 @@
             <div class="card-body">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Project</label>
+                        <div class="col-lg-9">
+                            {{ form1.prj }}
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-lg-3 col-form-label">Subject</label>
                         <div class="col-lg-9">
@@ -41,12 +47,7 @@
                             {{ form1.priority_name  }}
                         </div>
                     </div>
-                    <div class="form-group row">
-                        <label class="col-lg-3 col-form-label">Project</label>
-                        <div class="col-lg-9">
-                            {{ form1.prj }}
-                        </div>
-                    </div>
+
                     <div class="form-group row">
                         <label class="col-lg-3 col-form-label">Message</label>
                         <div class="col-lg-9">

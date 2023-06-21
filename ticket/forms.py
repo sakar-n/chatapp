@@ -3,10 +3,11 @@ from datetime import datetime, timedelta
 from .models import Tickets, Attachments, Priorities, MessageModel, MessageAttachments
 from company.models import CompanyUser, ForeignUser, Project
 from project.models import ProjectParasite
+
 class TicketForm(forms.ModelForm):
     subject = forms.CharField(max_length=100, required=True, widget=forms.TextInput(attrs={'placeholder':'subject', 'class':'form-control'}))
     message = forms.CharField(max_length=384000, required=True, widget=forms.Textarea(attrs={'placeholder':'Enter Message', 'class':'form-control'}))
-    prj = forms.ModelChoiceField(queryset=None, widget=forms.Select(attrs={'class':'select2'}))
+    prj = forms.ModelChoiceField(queryset=None, widget=forms.Select(attrs={'class':'select2'}),  disabled=True)
     due_date = forms.DateTimeField(widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}), initial=datetime.now() + timedelta(hours=48))
     priority_name = forms.ModelChoiceField(queryset=None)
 
@@ -15,8 +16,6 @@ class TicketForm(forms.ModelForm):
         self.request = kwargs.pop("request")
         # Retrieve company_id from kwargs
         super().__init__(*args, **kwargs)
-        
-       
         
 
         project_ids = [foreign_user.project_id for foreign_user in ProjectParasite.objects.filter(user_id=self.request.user)]
@@ -28,10 +27,13 @@ class TicketForm(forms.ModelForm):
         #     project_ids = [foreign_user.project_id for foreign_user in ProjectParasite.objects.filter(user_id=self.request.user)]
         # Filter priorities based on the company_id
         self.fields['prj'].queryset = Project.objects.filter(pk__in=project_ids)
+        self.fields['prj'].initial = project_ids[0]
+
         
         if company_id is not None:
             self.fields['priority_name'].queryset = Priorities.objects.filter(company_id=company_id)
 
+    
     class Meta:
         model = Tickets
         fields =['subject', 'message', 'priority_name', 'prj', 'due_date']

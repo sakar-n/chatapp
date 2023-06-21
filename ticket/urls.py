@@ -21,3 +21,4 @@ urlpatterns=[
     path('closetickets/<int:ticket_id>', CloseTicketByAdmin.as_view(), name='close_tickets'),
     path('deletetickets/<int:ticket_id>', DeleteTicketByAdmin.as_view(), name='delete_tickets'),
 ]
+

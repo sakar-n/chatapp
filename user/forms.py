@@ -21,7 +21,7 @@ class CreateUserForm(UserCreationForm):
 class UserLoginForm(forms.Form):
     email = forms.EmailField(max_length=50, required=True, widget=forms.EmailInput(attrs={'placeholder':'abc@email.com', 'class':'form-control'}))
     password = forms.CharField(max_length=50, required=True, widget=forms.PasswordInput(attrs={'placeholder': 'Password','class': 'form-control'}))
-   
+    
 class UserUpdateForm(forms.ModelForm):
     
     first_name = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'placeholder':'First Name', 'class':'form-control'}))

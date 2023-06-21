@@ -9,9 +9,27 @@ from company.models import Companies, CompanyUser, Project, AssiciateCompany, Pr
 from ticket.models import Tickets, Attachments
 from django.contrib.auth.views import PasswordResetView,PasswordResetCompleteView,PasswordResetConfirmView,PasswordResetDoneView
 from project.models import PasariteUser
+
+
+def error_404(request, exception):
+
+        return render(request,'404.html')
+
+def error_500(request):
+        return render(request,'500.html')
+        
+def error_403(request, exception):
+        return render(request,'403.html')
+
+def error_400(request,  exception):
+        return render(request,'400.html')
+    
+
 class Index(LoginRequiredMixin, View):
     template_name="index.html"
     template_name1="userindex.html"
+    template_name2="host_user_index.html"
+    template_name3="host_user_dashboard.html"
     def get(self, request):
         try:
             company_name = Companies.objects.get(user_id=request.user.id).company_name
@@ -33,17 +51,47 @@ class Index(LoginRequiredMixin, View):
                    }
             return render(request, self.template_name, context)
         except:
-            user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
-            rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
-            opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
-            pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
-            tickets = Tickets.objects.filter(issued_by_id=request.user.id).order_by('-created_at')
-            attachments = Attachments.objects.filter(ticket_id__in=tickets)
-            return render(request, self.template_name1, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"index"})
-
+            if PasariteUser.objects.filter(user_id= request.user.id):                
+                user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+                rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
+                opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
+                pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
+                tickets = Tickets.objects.filter(issued_by_id=request.user.id).order_by('-created_at')
+                attachments = Attachments.objects.filter(ticket_id__in=tickets)   
+                return render(request, self.template_name3, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"dashboard"}) 
+            else:
+                user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+                rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
+                opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
+                pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
+                tickets = Tickets.objects.filter(issued_by_id=request.user.id).order_by('-created_at')
+                attachments = Attachments.objects.filter(ticket_id__in=tickets)      
+                return render(request, self.template_name1, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"index"})
     
 
-     
+class Host_UnsolvedTickets(View):
+    template_name = "host_user_index.html"
+    def get(self, request):               
+                user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+                rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
+                opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
+                pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
+                tickets = Tickets.objects.filter(issued_by_id=request.user.id).order_by('-created_at')
+                attachments = Attachments.objects.filter(ticket_id__in=tickets)   
+                return render(request, self.template_name, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"index"}) 
+
+class Host_SolvedTickets(View):
+    template_name = "host_user_solved_ticket.html"
+    def get(self, request):               
+                user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
+                rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
+                opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
+                pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
+                tickets = Tickets.objects.filter(issued_by_id=request.user.id).order_by('-created_at')
+                attachments = Attachments.objects.filter(ticket_id__in=tickets)   
+                return render(request, self.template_name, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"solvedtickets"})
+
+
 class Register(LoginRequiredMixin, View):
     userform = CreateUserForm
     template_name = 'user_register.html'
@@ -82,13 +130,13 @@ class Login(View):
                 email = request.POST['email']
                 password = request.POST['password']
                 user = authenticate(request, email=email, password=password)
-                remember_me = request.POST.get("remember_me")
+                remember_me = request.POST.get("remember_me") == "on"
                 if user is not None:
                     login(request, user)
-                    if remember_me == 'on' :
+                    if remember_me:
                         request.session.set_expiry(1209600)
-                        print(request.POST)
-                    return redirect('index') 
+                        request.session.set_expiry(0)
+                    return redirect("index")
                 else:
                     if not CustomUser.objects.filter(email=email).exists():
                         messages.error(request, "Invalid email. Please enter a valid email address.")
@@ -201,4 +249,21 @@ class UserDelete(LoginRequiredMixin, View):
         user.delete()
         messages.success(request, "User deleted successfully")
         return redirect("index")
+
+class User_Active(View):
+    def get(self, request, user_id):
+        user = get_object_or_404(CustomUser, id = user_id)
+        user.is_active = True
+        user.save()
+        messages.success(request, 'User hav been Activated')
+        return redirect('index')
+
+class User_Deactivate(View):
+    def get(self, request, user_id):
+        user = get_object_or_404(CustomUser, id = user_id)
+        user.is_active = False
+        user.save()
+        messages.success(request, 'User hav been Dectivated')
+        return redirect('index')
+
 

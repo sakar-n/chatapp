@@ -1,5 +1,4 @@
-
-{% extends "userbase.html" %}
+{% extends "host_user_base.html"%}
 {% block content %}
 
 {% if user.is_authenticated %}
@@ -8,65 +7,14 @@
   <li class="breadcrumb-item active"><a>Tickets</a></li> 
   <li class="breadcrumb-item">Your Tickets</li>
 </ul>
-<!-- /statistic -->
-<div class="container-fluid">
-<div class="row">
-  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-    <div class="card dash-widget">
-      <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa fa-usd"></i></span>
-        <div class="dash-widget-info">
-          <h3>{{rec_tickets|length}}</h3>
-          <span><a href="{% url 'my_tickets'%}">Total Tickets Received</a></span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-    <div class="card dash-widget">
-      <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa fa-diamond"></i></span>
-        <div class="dash-widget-info">
-          <h3>{{ticket_count}}</h3>
-          <span><a href="{% url 'index'%}">Total Issued Tickets</a></span>
-        </div>
-      </div>
-    </div>
-  </div>
- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-    <div class="card dash-widget">
-      <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
-        <div class="dash-widget-info">
-          <h3> {{opened_tickets}} </h3>
-          <span><a href="{% url 'my_tickets'%}">Open Tickets</a></span>
-        </div>
-      </div>
-    </div>
-  </div>
- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-    <div class="card dash-widget">
-      <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
-        <div class="dash-widget-info">
-          <h3> {{pending_tickets}}</h3>
-          <span><a href="{% url 'my_tickets'%}">Pending Tickets</a></span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> 
+
 
 
 <div class="container-fluid">
-
-          
-
-
 
 
   <h4>Ticket Issued By: {{user.first_name}} </h4>
-
+  <a type="submit" class="btn btn-primary mb-3" href="{% url 'ticket' %}"> Issue Ticket </a>
 <table id="myTable"  class="table align-middle mb-0 bg-white table-striped" width="100%">
   <!-- <table  id="example" class="table align-middle mb-0 bg-white"> -->
     <thead class="bt-5">
@@ -83,6 +31,7 @@
     
  
     {% for ticket in tickets %}
+    {% if not ticket.closed_status or not ticket.status %}
     <tr>
       <td>
         <a href={% url 'view_ticket' ticket.ticket_id %}> <h4>{{ ticket.subject }}</h4> </a> <p>{{ ticket.message }}</p>
@@ -145,6 +94,7 @@
 
         </td>
     </tr>
+{% endif %}
 {% endfor %}
 
 
@@ -159,5 +109,4 @@
 
 
 {%endblock content%}
-
 
