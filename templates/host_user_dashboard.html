@@ -5,7 +5,7 @@
 
 <ul class="breadcrumb">
   <li class="breadcrumb-item active"><a>Tickets</a></li> 
-  <li class="breadcrumb-item">Your Tickets</li>
+  <li class="breadcrumb-item">Dashboard</li>
 </ul>
 <!-- /statistic -->
 <div class="container-fluid">
@@ -13,18 +13,7 @@
   <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
     <div class="card dash-widget">
       <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa fa-usd"></i></span>
-        <div class="dash-widget-info">
-          <h3>{{rec_tickets|length}}</h3>
-          <span><a href="{% url 'my_tickets'%}">Total Tickets Received</a></span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
-    <div class="card dash-widget">
-      <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa fa-diamond"></i></span>
+        <span class="dash-widget-icon"><i class="fa fa-suitcase"></i></span>
         <div class="dash-widget-info">
           <h3>{{ticket_count}}</h3>
           <span><a href="{% url 'index'%}">Total Issued Tickets</a></span>
@@ -35,10 +24,10 @@
  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
     <div class="card dash-widget">
       <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+        <span class="dash-widget-icon"><i class="fa fa-envelope-open"></i></span>
         <div class="dash-widget-info">
           <h3> {{opened_tickets}} </h3>
-          <span><a href="{% url 'my_tickets'%}">Open Tickets</a></span>
+          <span><a href="{% url 'host_unsolved'%}">Open Tickets</a></span>
         </div>
       </div>
     </div>
@@ -46,10 +35,21 @@
  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
     <div class="card dash-widget">
       <div class="card-body">
-        <span class="dash-widget-icon"><i class="fa fa-user"></i></span>
+        <span class="dash-widget-icon"><i class="fa fa-hourglass-half"></i></span>
         <div class="dash-widget-info">
           <h3> {{pending_tickets}}</h3>
-          <span><a href="{% url 'my_tickets'%}">Pending Tickets</a></span>
+          <span><a href="{% url 'host_unsolved'%}">Pending Tickets</a></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+    <div class="card dash-widget">
+      <div class="card-body">
+        <span class="dash-widget-icon"><i class="fa fa-lock"></i></span>
+        <div class="dash-widget-info">
+          <h3> {{closed_tickets}}</h3>
+          <span><a href="{% url 'solved_tickets'%}">Closed Tickets</a></span>
         </div>
       </div>
     </div>
