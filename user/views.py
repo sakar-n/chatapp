@@ -54,11 +54,12 @@ class Index(LoginRequiredMixin, View):
             if PasariteUser.objects.filter(user_id= request.user.id):                
                 user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
                 rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
-                opened_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=1, closed_status=0).count()
-                pending_tickets = Tickets.objects.filter(prj_id__in=user_project_id, status=0, closed_status=0).count()
+                opened_tickets = Tickets.objects.filter(issued_by_id=request.user.id, status=1, closed_status=0).count()
+                pending_tickets = Tickets.objects.filter(issued_by_id=request.user.id, status=0, closed_status=0).count()
+                closed_tickets = Tickets.objects.filter(issued_by_id=request.user.id, status=1, closed_status=1).count()
                 tickets = Tickets.objects.filter(issued_by_id=request.user.id).order_by('-created_at')
                 attachments = Attachments.objects.filter(ticket_id__in=tickets)   
-                return render(request, self.template_name3, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), "active_link":"dashboard"}) 
+                return render(request, self.template_name3, {'tickets':tickets, 'attachments':attachments, 'rec_tickets':rec_tickets, 'opened_tickets':opened_tickets, 'pending_tickets': pending_tickets, 'ticket_count':tickets.count(), 'closed_tickets':closed_tickets, "active_link":"dashboard"}) 
             else:
                 user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
                 rec_tickets = Tickets.objects.filter(prj_id__in=user_project_id)
