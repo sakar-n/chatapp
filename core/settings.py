@@ -13,8 +13,9 @@ import os
 from pathlib import Path
 import environ
 from django.contrib.messages import constants as messages
-env = environ.Env()
-environ.Env.read_env()
+# env = environ.Env()
+# environ.Env.read_env()
+# print(env('SECRET_KEY'))
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -34,11 +35,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = 'django-insecure-id$z6yss*&=3@-jo1jydk3vlv@gm$-xvc)k*zwg2pvz2^i2*fe'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
 ALLOWED_HOSTS = ['*']
 
 
@@ -50,7 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    # 'daphne',
+    'daphne',
     # 'channels',
     'django.contrib.staticfiles',
     'user',
@@ -90,9 +90,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'core.wsgi.application'
-# ASGI_APPLICATION = 'core.asgi.application'
+# WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = 'core.asgi.application'
 
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 
 # Database
@@ -101,11 +107,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
      'default': {  
         'ENGINE': 'django.db.backends.mysql',  
-        'NAME': env('DATABASE_NAME'),  
-        'USER': env('DATABASE_USER'),  
-        'PASSWORD': env('DATABASE_PASSWORD'),  
-        'HOST': env('DATABASE_HOST'),  
-        'PORT': env('DATABASE_PORT'),  
+        'NAME': 'email_ticketing_system',  
+        'USER': 'root',  
+        'PASSWORD':'',  
+        'HOST': '127.0.0.1',  
+        'PORT': '3306',  
         'OPTIONS': {  
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
             "init_command": "SET foreign_key_checks = 0;",  

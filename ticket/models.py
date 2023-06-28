@@ -26,13 +26,28 @@ class Tickets(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-class MessageModel(models.Model):
+class Room(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True)
+
+
+class Message(models.Model):
+    room = models.ForeignKey(Room, related_name='messages', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='messages', on_delete=models.CASCADE)
+    content = models.TextField()
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('date_added',)
+
+class Messagemodel(models.Model):
     message_id = models.AutoField(primary_key=True)
     ticket = models.ForeignKey(Tickets, on_delete=models.CASCADE)
     message = models.CharField(max_length=384000, null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
+
     
 class Attachments(models.Model):
     attachment_id =  models.AutoField(primary_key=True)
@@ -43,4 +58,4 @@ class MessageAttachments(models.Model):
     attachment_id =  models.AutoField(primary_key=True)
     file = models.FileField(upload_to="media/", null=True, blank=True)
     ticket = models.ForeignKey(Tickets, on_delete=models.CASCADE)
-    message = models.ForeignKey(MessageModel, on_delete=models.CASCADE)
+    message = models.ForeignKey(Messagemodel, on_delete=models.CASCADE)

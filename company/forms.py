@@ -15,6 +15,7 @@ class CompanyForm(forms.ModelForm):
     
 
 class CreateCompanyForm(UserCreationForm):
+    username = forms.CharField(max_length=100, required=True)
     email = forms.EmailField( max_length=50, required=True, widget=forms.EmailInput(attrs={'placeholder':'abc@email.com', 'class':'form-control'}))
     phone = forms.IntegerField(required=True, widget=forms.TextInput(attrs={'placeholder': '9876543210','class': 'form-control'}))
     password1 = forms.CharField(max_length=50, required=True, widget=forms.PasswordInput(attrs={'placeholder': 'Password','class': 'form-control'}))
@@ -22,7 +23,7 @@ class CreateCompanyForm(UserCreationForm):
     
     class Meta:
         model = CustomUser
-        fields= ['email', 'phone', 'password1', 'password2']
+        fields= ['username', 'email', 'phone', 'password1', 'password2']
 
 class CompanyUpdateForm(forms.ModelForm):
     company_name = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'placeholder':'ABC PVT. LTD', 'class':'form-control'}))

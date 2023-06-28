@@ -4,13 +4,26 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from .forms import TicketForm, AttachmentForm, AddPrioritiesForm, MessageForm, MessageAttachmentForm
 from company.models import Companies, CompanyUser, ForeignUser, ProjectUser, Project, AssiciateCompany
-from .models import Priorities, Project, Tickets, MessageModel, MessageAttachments, Attachments
+from .models import Priorities, Project, Tickets, MessageAttachments, Attachments, Room, Messagemodel, Message
 from django.core.serializers import serialize
 from django.http import JsonResponse
 from project.models import PasariteUser
+from django.contrib.auth.decorators import login_required
+from django.utils.text import slugify
+
 # Create your views here.
 
+@login_required
+def rooms(request):
+    rooms = Room.objects.all()
+    return render(request, 'room/rooms.html', {'rooms': rooms})
 
+@login_required
+def room(request, slug):
+    room = Room.objects.get(slug=slug)
+    messages = Message.objects.filter()
+
+    return render(request, 'room/room.html', {'room': room, 'messages': messages})
 
 
 class Ticket(View):
@@ -40,7 +53,11 @@ class Ticket(View):
                 ticket.issued_by_id = request.user.id
                 ticket.priority_id = request.POST['priority_name']
                 ticket.prj_id = request.POST['prj']
+                room_slug = slugify(ticket.name)
+                room = Room.objects.create(name=ticket.name, slug=room_slug)
+                ticket.room = room
                 ticket.save()
+        
                 if form1.is_valid() and 'file' in request.FILES: 
                     attachment = form2.save(commit=False)
                     attachment.ticket_id = ticket.ticket_id
@@ -57,9 +74,15 @@ class Ticket(View):
                 ticket.issued_by_id = request.user.id
                 ticket.priority_id = request.POST['priority_name']
                 project_name = form1.cleaned_data['prj']
-                project = Project.objects.filter(project_name=project_name).first() # Retrieve the project based on the name
+                project = Project.objects.filter(project_name=project_name).first() 
                 ticket.prj_id = project.project_id
+
+                room_slug = slugify(ticket.subject)
+                room = Room.objects.create(name=ticket.name, slug=room_slug)
+                ticket.room = room
+
                 ticket.save()
+
                 if form1.is_valid() and 'file' in request.FILES: 
                     attachment = form2.save(commit=False)
                     attachment.ticket_id = ticket.ticket_id
@@ -142,7 +165,7 @@ class DisplayingTickets(View):
         attachments = Attachments.objects.filter(ticket_id__in=displaying_tickets)
         return render(request, self.template_name, {'displaying_tickets':displaying_tickets, 'attachments':attachments, "active_link" : "receivedTickets"})
 
-class Message(View):
+class Messages(View):
     base_template = 'base.html'
     userbase_template = 'userbase.html'
     host_user_base = 'host_user_base.html'
@@ -153,7 +176,7 @@ class Message(View):
         user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
         displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id, ticket_id=ticket_id)
         ramey = Tickets.objects.get(ticket_id=ticket_id)
-        displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        displaying_message = Messagemodel.objects.filter(ticket_id = ticket_id)
         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
         user_id = request.user.id
         if PasariteUser.objects.filter(user_id=user_id).exists():
@@ -165,7 +188,7 @@ class Message(View):
     def post(self, request, ticket_id):
         user_project_id =  ProjectUser.objects.filter(user_id=request.user.id).values_list('project_id', flat=True)
         displaying_tickets = Tickets.objects.filter(prj_id__in=user_project_id, ticket_id=ticket_id)
-        displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        displaying_message = Messagemodel.objects.filter(ticket_id = ticket_id)
         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
         form1 = self.message_form(request.POST)
         form2 = self.attachment(request.POST, request.FILES)
@@ -196,7 +219,7 @@ class GetMessage(View):
     def get(self, request, ticket_id):
         user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
         displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
-        displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        displaying_message = Messagemodel.objects.filter(ticket_id = ticket_id)
         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
         # messagelist = serialize('json', displaying_message)
         # print(messagelist)
@@ -205,7 +228,7 @@ class GetMessage(View):
     # def post(self, request, ticket_id):
     #     user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
     #     displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
-    #     displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+    #     displaying_message = Messagemodel.objects.filter(ticket_id = ticket_id)
     #     form1 = self.message_form(request.POST)
     #     form2 = self.attachment(request.POST, request.FILES)
     #     if form1.is_valid():
@@ -268,7 +291,7 @@ class Test(View):
     def get(self, request, ticket_id):
         user_project_id =  ProjectUser.objects.get(user_id = request.user.id).project_id
         displaying_tickets = Tickets.objects.filter(prj_id=user_project_id, ticket_id = ticket_id)
-        displaying_message = MessageModel.objects.filter(ticket_id = ticket_id)
+        displaying_message = Messagemodel.objects.filter(ticket_id = ticket_id)
         displaying_attachment = MessageAttachments.objects.filter(ticket_id = ticket_id)
         return render(request, 'test.html', {'displaying_tickets':displaying_tickets, 'displaying_message':displaying_message, 'form1':self.message_form, 'form2':self.attachment ,"ticket_id":ticket_id})
     

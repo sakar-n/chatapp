@@ -48,7 +48,9 @@
               {{ form.password }}
             </div>
             <div class="form-group text-center">
-              <div class="form-check mb-0">
+              <form method="post">
+                {% csrf_token %}
+              <div class="form-group form-check">
                 <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
                 <label class="form-check-label" for="remember_me">
                   Remember me
@@ -58,6 +60,9 @@
             </div>
             <div class="account-footer">
               <p>Forget Password ? <a href="{% url 'reset_password' %}">Reset</a></p>
+            </div>
+            <div class="account-footer">
+              <p>Don't have an account yet? <a href="{% url 'register' %}">Register</a></p>
             </div>
 
             {% if form.errors %}

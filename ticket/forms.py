@@ -1,6 +1,6 @@
 from django import forms
 from datetime import datetime, timedelta
-from .models import Tickets, Attachments, Priorities, MessageModel, MessageAttachments
+from .models import Tickets, Attachments, Priorities, MessageAttachments, Messagemodel
 from company.models import CompanyUser, ForeignUser, Project
 from project.models import ProjectParasite
 
@@ -58,7 +58,7 @@ class MessageForm(forms.ModelForm):
     message = forms.CharField(max_length=384000, required=False, widget=forms.TextInput(attrs={'placeholder':'Enter Message', 'class':'form-control'}))
     
     class Meta:
-        model = MessageModel
+        model = Messagemodel
         fields = ['message']
         
 class MessageAttachmentForm(forms.ModelForm):

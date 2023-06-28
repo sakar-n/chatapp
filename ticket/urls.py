@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import Ticket, AddPriority, DeletePriority, PriorityUpdate, DisplayingTickets, Message, DeleteTicket, OpenTicket, CloseTicket, TicketDetail, GetMessage, Test, DisplayingReceivedTickets, DisplayingIssuedTickets, OpenTicketByAdmin, CloseTicketByAdmin, DeleteTicketByAdmin
-
+from .views import Ticket, AddPriority, DeletePriority, PriorityUpdate, DisplayingTickets, Messages, DeleteTicket, OpenTicket, CloseTicket, TicketDetail, GetMessage, Test, DisplayingReceivedTickets, DisplayingIssuedTickets, OpenTicketByAdmin, CloseTicketByAdmin, DeleteTicketByAdmin
+from ticket import views
 
 urlpatterns=[
     path('',Ticket.as_view(), name='ticket'),
@@ -11,7 +11,7 @@ urlpatterns=[
     path('mytickets/', DisplayingTickets.as_view(), name='my_tickets'),
     path('openticket/<int:ticket_id>', OpenTicket.as_view(), name='open_ticket'),
     path('closeticket/<int:ticket_id>', CloseTicket.as_view(), name='close_ticket'),
-    path('message/<int:ticket_id>/', Message.as_view(), name='message'),
+    path('message/<int:ticket_id>/', Messages.as_view(), name='message'),
     path('getmessage/<int:ticket_id>/', GetMessage.as_view(), name='getmessage'),
     path('deleteticket/<int:ticket_id>', DeleteTicket.as_view(), name='delete_ticket'),
     path('ticket_view/<int:ticket_id>', TicketDetail.as_view(), name='view_ticket'),
@@ -20,5 +20,7 @@ urlpatterns=[
     path('opentickets/<int:ticket_id>', OpenTicketByAdmin.as_view(), name='open_tickets'),
     path('closetickets/<int:ticket_id>', CloseTicketByAdmin.as_view(), name='close_tickets'),
     path('deletetickets/<int:ticket_id>', DeleteTicketByAdmin.as_view(), name='delete_tickets'),
+    path('room', views.rooms, name='rooms'),
+    path('<slug:slug>/', views.room, name='room'),
 ]
 

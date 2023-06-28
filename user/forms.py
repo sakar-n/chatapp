@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, User
 
 
 class CreateUserForm(UserCreationForm):
-    
+    username = forms.CharField(max_length=100)
     first_name = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'placeholder':'First Name', 'class':'form-control'}))
     last_name = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'placeholder':'Last Name', 'class':'form-control'}))
     email = forms.EmailField( max_length=50, required=True, widget=forms.EmailInput(attrs={'placeholder':'abc@email.com', 'class':'form-control'}))
@@ -15,7 +15,7 @@ class CreateUserForm(UserCreationForm):
     
     class Meta:
         model = CustomUser
-        fields= ['first_name', 'last_name', 'email', 'phone', 'password1', 'password2']
+        fields= ['username','first_name', 'last_name', 'email', 'phone', 'password1', 'password2']
     
 
 class UserLoginForm(forms.Form):

@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 
-class CompanyReg(LoginRequiredMixin, View):
+class CompanyReg(View):
     company_form = CompanyForm
     reg_form = CreateCompanyForm
     template_name = "register.html"

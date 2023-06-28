@@ -6,6 +6,7 @@
 <ul class="breadcrumb">
   <li class="breadcrumb-item active"><a>Tickets</a></li> 
   <li class="breadcrumb-item">Unsolved Tickets</li>
+
 </ul>
 
 
@@ -59,7 +60,7 @@
         {% else  %}
           <td> <span class="badge badge-danger rounded-pill d-inline"> Pending </span> </td>
         {% endif %} </td>
-        <td>  <a type="button" href="{% url 'message' ticket.ticket_id %}" class="btn btn-link btn-sm btn-rounded">
+        <td>  <a type="button" href="{% url 'rooms'  %}" class="btn btn-link btn-sm btn-rounded">
           Message
         </a>
        </td>
