@@ -10,14 +10,17 @@ from django.http import JsonResponse
 from project.models import PasariteUser
 from django.contrib.auth.decorators import login_required
 from django.utils.text import slugify
-
+from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
+
+@csrf_exempt
 @login_required
 def rooms(request):
     rooms = Room.objects.all()
     return render(request, 'room/rooms.html', {'rooms': rooms})
 
+@csrf_exempt
 @login_required
 def room(request, slug):
     room = Room.objects.get(slug=slug)
