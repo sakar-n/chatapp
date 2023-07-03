@@ -42,12 +42,12 @@
 
           <td>
             {% if myticket.closed_status  and  myticket.status %}
-            <a type="button" href="{% url 'message' myticket.ticket_id %}" class="btn btn-primary">
+            <a type="button" href="{% url 'rooms'  %}" class="btn btn-primary">
               Message
           </a>
             {%else%}
             {% if myticket.status %}  
-            <a type="button" href="{% url 'message' myticket.ticket_id %}" class="btn btn-primary">
+            <a type="button" href="{% url 'rooms'  %}" class="btn btn-primary">
                 Message
             </a>
             
